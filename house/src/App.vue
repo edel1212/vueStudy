@@ -6,18 +6,29 @@
     </a>
   </div>
 
+  <div v-if=" 1 === 2">
+    if 문
+  </div>
+  <div v-else-if="1 === 1">
+    else if 문
+  </div>
+  <!-- <div>중간에 끼면 안되네..</div> -->
+  <div v-else>
+    else 문
+  </div>
+
   <div class="itemSection" v-for="(item, index) in oneRoomData" :key="index">    
     <img :src="item.image" class="room-img">       
-    <h4>{{item.title}}</h4>
-    <p>{{item.price}} 만원</p>  
+    <h4 @click="this.modalState = true; clickNum = index">{{item.title}}</h4>
+    <p>{{item.price}} 원</p>  
     <p>{{item.content}}</p>
   </div>
 
   <!-- Modal -->
-  <div class="black-bg" v-if="!modalState">
+  <div class="black-bg" v-if="modalState">
     <div class="white-bg">
-      <h4>상세페이지</h4>
-      <p>상세페이지 내용</p>
+      <h4>{{oneRoomData[clickNum].title}}</h4>
+      <p>{{oneRoomData[clickNum].content}}</p>
       <button @click="this.modalState = false">닫기</button>
     </div>
   </div>
@@ -36,8 +47,9 @@ export default {
       products : [ {name:"역삼동원룸", reportCnt : 0 }
                  , {name:"천호동원룸", reportCnt : 0 }
                   , {name:"마보구원룸", reportCnt : 0} ],
-      modalState : true,
-      oneRoomData : dummyData                  
+      modalState : false,
+      oneRoomData : dummyData,
+      clickNum : 0,                  
     }
   },
   methods:{   // 함수를 담는곳

@@ -267,4 +267,17 @@ export default {
   </div>
 </div>
 
+
+<!-- v-if ~ else-if ~ else -->
+<div v-if=" 1 === 2">
+  if 문
+</div>
+<div v-else-if="1 === 1">
+  else if 문
+</div>
+<!-- <div> ⭐️ 중간에 끼면 안된다!</div> -->
+<div v-else>
+  else 문
+</div>
 ```
+
