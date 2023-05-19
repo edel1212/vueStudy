@@ -6,15 +6,15 @@
     </a>
   </div>
 
-  <div class="itemSection" v-for="(item, index) in products" :key="index">    
-    <img :src="require(`@/assets/img/room${index}.jpg`)" class="room-img">       
-    <h4>{{item.name}}</h4>
-    <p>{{(index+1) *10}} 만원</p>  
-    <button @click="increase(index)">허위매물 신고</button> <span>신고수 : {{item.reportCnt}}</span>
+  <div class="itemSection" v-for="(item, index) in oneRoomData" :key="index">    
+    <img :src="item.image" class="room-img">       
+    <h4>{{item.title}}</h4>
+    <p>{{item.price}} 만원</p>  
+    <p>{{item.content}}</p>
   </div>
-  
+
   <!-- Modal -->
-  <div class="black-bg" v-if="modalState">
+  <div class="black-bg" v-if="!modalState">
     <div class="white-bg">
       <h4>상세페이지</h4>
       <p>상세페이지 내용</p>
@@ -26,6 +26,8 @@
 
 <script>
 
+import dummyData from "./assets/json/dummyData.js"
+
 export default {
   name: 'App',
   data(){     // 데이터를 담는 곳
@@ -34,7 +36,8 @@ export default {
       products : [ {name:"역삼동원룸", reportCnt : 0 }
                  , {name:"천호동원룸", reportCnt : 0 }
                   , {name:"마보구원룸", reportCnt : 0} ],
-      modalState : true,                  
+      modalState : true,
+      oneRoomData : dummyData                  
     }
   },
   methods:{   // 함수를 담는곳
