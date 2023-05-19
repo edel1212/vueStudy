@@ -110,6 +110,58 @@ export default {
   - require()를 사용 ✅ 문제없음
     - `<img :src="require(`@/assets/img/room${index}.jpg`)" class="room-img"> `
 
+
+<br/>
+<hr/>
+
+## Import, Export
+
+👉 Export 대상 js
+```javascript
+  // js File
+ 
+  let apple = 10;
+
+  let apple2 = 100;
+  
+  // 방법 1 . export default 변수명
+  export default apple;   // 👉 하나만  밖으로 보냄
+  
+  // 방법 2 . export {변수 , 변수 , ...}
+  export {apple, apple2};  // 👉 다수를 밖에 보낼 수 있음
+```
+
+👉 Import 대상 js
+```html
+<!-- App.vue -->
+
+<template> 
+<!-- code ..-->
+</template>
+
+<script>
+  /** 
+  * 방법 1
+  * - export를 Default로 지정 시 변수 명을 변경하여 부를수 있다.
+  * - 어차피 하나이기 때문임!!
+  * - 불러오는 방식 또한 "./"를 사용하여 불러옴 
+  */
+  import variableNameChange from "./assets/json/oneroom.js"
+  // ✅ 사용하지 않으면 Error 발생
+  //variableNameChange;
+  
+  //방법 2 - 다건
+  import {apple, apple2} from "./assets/json/oneroom.js";
+  console.log(apple);
+  console.log(apple2);
+  
+  // JSON 데이터를 불러옴 Export 시 default로 지정 하였음
+  import dummyData from "./assets/json/dummyData.js"
+</script>
+
+
+```
+
 <br/>
 <hr/>
 
