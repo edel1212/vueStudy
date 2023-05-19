@@ -17,10 +17,11 @@
   <div class="itemSection" v-for="(item, index) in products" :key="index">
     <h4>{{item.name}}</h4>
     <p>{{(index+1) *10}} 만원</p>  
-    <!-- <button @click="reportCnt++">허위매물 신고</button> <span>신고수 : {{reportCnt}}</span> -->
-    <button @click="item.reportCnt++">허위매물 신고</button> <span>신고수 : {{item.reportCnt}}</span>
+    <!-- <button @click="item.reportCnt++">허위매물 신고</button> <span>신고수 : {{reportCnt}}</span> -->
+    <button @click="increase(index)">허위매물 신고</button> <span>신고수 : {{item.reportCnt}}</span>
     <!-- <button @mouseover="reportCnt++">허위매물 신고</button> <span>신고수 : {{reportCnt}}</span> -->
   </div>
+  
 
 </template>
 
@@ -37,8 +38,8 @@ export default {
     }
   },
   methods:{   // 함수를 담는곳
-    increase(){
-      this.reportCnt++;
+    increase(index){
+      this.products[index].reportCnt++;
     }
   },
   components: {
