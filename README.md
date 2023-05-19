@@ -88,6 +88,31 @@ export default {
 <br/>
 <hr/>
 
+## Image 가져오기
+
+### Vue 자체에서는 이미지를 가져올때 웹팩을 사용할 경우 절대경로로 가져오지 못하는 문제가 있다
+- 이미지 자체에 이미지명 + 난수가 붙어 있다. 👉 ex) `/img/room0.e2d4696b.jpg`
+
+### 차이점
+- 웹팩을 사용한 경로 지정시 ✅ 문제 없음
+  -   `<img src="./asset/img/yoo.jpg">` ./로 시작하면 src 경로를 기준으로 이미지를 찾아다 줌 이미지 명 뒤에 난수가 붙어있다.
+
+
+- 일반 절대 경로 사용 시  
+  - 일반적인 절대경로 사용 시 ❌ 404 not found
+    - `<img src="/assets/img/room0.jpg" class="room-img">` 경로는 맞지만 이미지를 찾기 못하는 문제 발생
+  - 일반적인 절대경로 사용 시 "@"적용 ✅ 문제없음
+    - `<img src="@/assets/img/room0.jpg" class="room-img">`
+  
+- 데이터에 접근하여 이미지를 지정하고 싶을 경우
+  - Vue의 일반적은 ":" 만 사용 시 ❌ 404 not found
+    - `<img :src="`@/assets/img/room${index}.jpg`" class="room-img">` 경로 자체에 "@" 박혀서 나옴
+  - require()를 사용 ✅ 문제없음
+    - `<img :src="require(`@/assets/img/room${index}.jpg`)" class="room-img"> `
+
+<br/>
+<hr/>
+
 ## Vue 명령문
 
 ### v-for문 사용방법
