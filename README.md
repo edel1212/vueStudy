@@ -466,3 +466,80 @@ export default {
 
 <style></style>
 ```
+
+<br/>
+<hr/>
+
+## Component - 자식이 부모의 Data에 접근 하는 방법
+- 기본적으로 자식 자체에서 부모의 데이터를 변경할수는 없다
+- 따라서 부모에게 요청사항을 전달하고 부모 컴포넌트에서 해당 사항을 적용 하는 방식이다.
+
+### 👉 자식 Component에서 전달 
+- `$emit("사용될 Key명", 넘겨줄 데이터)`로 보내주면 된다.
+  - 중요 : methods 내부에서는 `$emit()`사용시 **"this."** 는 필수이다 
+```html
+<template>
+    // 클릭 시  함수 실행 
+    <h4 @click="openModal(oneRoomData)">{{oneRoomData.title}}</h4>
+</template>
+
+<script>
+export default {
+    name : "Card-Component",
+    data(){     
+        return { }  
+      },
+    methods : {
+        openModal(oneRoomData){
+            /**
+             * 👉 "this."는 필수이다.
+             * 👉 부모 컴포넌트에 전달 $emit('작명', 데이터)
+             */
+            this.$emit('openModal', oneRoomData.id);
+        }
+    }  ,
+    props : {
+        oneRoomData :  Object,
+    }
+}
+</script>
+```
+
+### 👉 부모 Component에서 받기
+- `@자식컴포넌트에 서작명한것 = "$event"`를 사용하면 `$event`안에는 넘겨준 값이 들어가 있다.
+  - 내부에서 받아 쓸 수 도 있고 함수로 받아서 사용 또한 가능하다 
+
+```html
+<template>
+  <!-- Card -->
+  <!-- @자식 컴포넌트에서 작명한 것= "함수 또는 코드 $event" -->
+  <Card @openModal="modalEvent($event)" v-for="(item, idx) in oneRoomData" :key="idx"  v-bind:oneRoomData="oneRoomData[idx]" />   
+</template>
+
+<script>
+
+// Component
+import Card from "./Card.vue"
+
+// DummyData
+import dummyData from "./assets/json/dummyData.js"
+
+export default {
+  name: 'App',
+  data(){     // 데이터를 담는 곳
+    return {
+      modalState : false,
+      oneRoomData : dummyData,
+      clickNum : 0,                  
+    }  
+  },
+  methods:{   // 함수를 담는곳
+    modalEvent (clickNum){
+      this.modalState = true;
+      this.clickNum = clickNum;
+    }
+  },
+  components: { Modal,}
+}
+</script>
+```
