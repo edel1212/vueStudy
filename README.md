@@ -281,3 +281,61 @@ export default {
 </div>
 ```
 
+
+<br/>
+<hr/>
+
+## Component란 ?
+
+## 사용이유 
+- 재사용에 용의하다.
+- App.vue에서 모든 코드를 넣어 사용하는 것이 아니기에 코드가 간결해지며 가독성이 높아짐
+## 단점 
+- 데이터 바인딩 및 이벤츠 처리가 복잡해진다.
+
+
+### 사용 방법
+- 1 . 파일명.vue 파일을 생성한다.
+- 2 . 해당 파일을 vue 파일의 형식에 맞게 생성한다.  👉  Extention을 받았다면 간편하게 생성 가능
+```html
+<!-- 대상.vue -->
+
+<template></template>
+
+<script>
+export default {    
+    name: "사용할 이름 아무거나 가능하나 중간 "-"로 구분자 필요",
+    data(){
+        return
+    },
+    methods: {
+        // 함수
+    },
+    components: {
+        // 불러올 컴포넌트
+    }
+}
+</script>
+
+<style></style>
+```
+- 3 . 부모 vue 파일에서 대상 import 해준다. `<script>import 대상명 from '대상위치'</script>`
+- 4 . 부모 vue 파일의 script 내부 component에 import한 대상 추가
+```html
+<!--  부모.vue -->
+<script>
+    // 👉 Target Import
+    import Discount from "./Discount.vue";
+    
+    export default {
+      name: 'App',
+      data(){ /** code */ },
+      methods:{ /** code */ },
+      components: {
+        // 👉 Add Target Component 
+        // Discount : Discount  - key : value가 같다면 한개로 축약 가능
+        Discount
+      }
+    }
+</script>
+```
