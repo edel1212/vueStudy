@@ -339,3 +339,130 @@ export default {
     }
 </script>
 ```
+
+<br/>
+<hr/>
+
+## Component - 부모의 Data에 접근하기
+
+- props를 사용하면 부모 컴포넌트에서 자식 컴포넌트로 데이터 전달이 가능하다.
+
+### 방법은 2가지
+- 첫번째 : `v-bind="전달대상"`을 사용하는 방법
+- 두번째 : `:데이터이름="전달대상"`을 사용하는 방법
+
+### 주의사항
+- 자식 컴포넌트에서 data에 데이터를 추가해서 사용해도 되지만 만약 부모, 자식 둘다 쓰는 데이터라면 **부모컴포넌트에 만드는게 맞다.**
+- 자식 컴포넌트에서 prop으로 받은 데이터는 재할당 **(수정)**  불가능하다
+- 부모 컴포넌트에서는 자식 컴포넌트를 부를 경우 `<자식컴포넌트 :명칭="data" />` 또는 `<자식컴포넌트 v-bind:명칭="데이터" />`를 사용해야함
+- 자식 컴포넌트에서는 `<script></script>` 내부에서 `props : { 부모지정이름 : 자료구조 }`를 맞춰서 불러줘야한다.
+
+### 추가정보
+- 일반적인 문자는 ":"를 쓰지 않고도 전달이 가능하다
+- 단 숫자도 가능은하나 전달받은 자식창에서는 문자로 받아진다. `<ComponentTest 이름지정="이렇게전달 해도 자식에서 받습니다." />`
+- Object나 배열의 경우 해당 key 혹인 index를 통해 전달이 가능하다. `<ComponentTest :이름지정="arry[22]" v-bind:이름지정2="obj.name" />`
+  - 단 해당 경우에는 ":", "v-bind" 필수이다!! 이름에서 보시다싶이 바인딩을 해줘야함! 
+
+### 사용방법
+
+👉 부모 Component
+```html
+<!-- App.vue -->
+
+<template>
+  
+  <!-- ✅ 구조는 지졍이름:대상Data이다 -->
+  
+  <!-- Discount -->
+  <!-- 👉 v-bind를 사용  -->
+  <Discount v-bind:아무거나 작명가능="bindSendDataTest"/>
+  <!-- Modal -->
+  <!-- 👉 ":"를 사용  -->
+  <Modal :oneRoomData="oneRoomData" :clickNum=clickNum :modalState=modalState />
+</template>
+
+<script>
+// Component
+import Discount from "./Discount.vue";
+import Modal from "./Modal.vue"
+
+// DummyData
+import dummyData from "./assets/json/dummyData.js"
+
+export default {
+  name: 'App',
+  data(){     // 데이터를 담는 곳
+    return {
+      modalState : false,
+      oneRoomData : dummyData,
+      clickNum : 0,                  
+      bindSendDataTest : 200,      
+    }  
+  },
+  methods:{ },
+  components: {
+    // Discount : Discount
+    Discount,
+    // Modal
+    Modal
+  }
+}
+</script>
+```
+
+👉 자식 Component - Discount
+```html
+<!-- Discount.vue -->
+
+<template>
+  <div class="discount">
+    지금 결제하면 20% 할인 {{작명가능}}
+  </div>
+</template>
+
+<script>
+export default {    
+    name: "Discount-Component",
+    data(){
+        return
+    },
+    props : { // ✅ props는 필수!~~~~
+        //  👉 부모에서 넘겨준 이름 : 자료구조
+        작명가능 : Number,
+    }
+}
+</script>
+
+<style></style>
+```
+
+👉 자식 Component - Modal
+```html
+<!-- Modal.vue -->
+
+<template>
+  <div class="black-bg" v-if="modalState">
+    <div class="white-bg">
+      <img :src="oneRoomData[clickNum].image" >
+      <h4>{{oneRoomData[clickNum].title}}</h4>
+      <p>{{oneRoomData[clickNum].content}}</p>
+      <p>{{oneRoomData[clickNum].price}}</p>
+      <!-- ❌ props에서 받아온 데이터는 재할당(변경)이 불가능하다 "read-only" -->
+      <!-- <button @click="this.modalState = false">닫기</button> -->
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+    name: "Modal-Component",
+    props:{
+      // 받아온 key : 자료형
+      oneRoomData : Array,
+      clickNum : Number,
+      modalState : Boolean
+    }
+}
+
+<style></style>
+```
