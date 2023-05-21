@@ -6,17 +6,13 @@
     </a>
   </div>
 
-  <Discount/>
+  <Discount />
 
-  <div class="itemSection" v-for="(item, index) in oneRoomData" :key="index">    
-    <img :src="item.image" class="room-img">       
-    <h4 @click="this.modalState = true; clickNum = index">{{item.title}}</h4>
-    <p>{{item.price}} 원</p>  
-    <p>{{item.content}}</p>
-  </div>
+  <!-- Card -->
+  <Card v-for="(item, idx) in oneRoomData" :key="idx"  v-bind:oneRoomData="oneRoomData[idx]" />
 
   <!-- Modal -->
-  <Modal/>
+  <Modal :oneRoomData="oneRoomData" :clickNum=clickNum :modalState=modalState />
 
 </template>
 
@@ -25,34 +21,31 @@
 // Component
 import Discount from "./Discount.vue";
 import Modal from "./Modal.vue"
+import Card from "./Card.vue"
 
+// DummyData
 import dummyData from "./assets/json/dummyData.js"
-
-
 
 export default {
   name: 'App',
   data(){     // 데이터를 담는 곳
     return {
       topMenu : ["Home", "Shop", "About"],
-      products : [ {name:"역삼동원룸", reportCnt : 0 }
-                 , {name:"천호동원룸", reportCnt : 0 }
-                  , {name:"마보구원룸", reportCnt : 0} ],
       modalState : false,
       oneRoomData : dummyData,
       clickNum : 0,                  
-    }
+    }  
   },
   methods:{   // 함수를 담는곳
-    increase(index){
-      this.products[index].reportCnt++;
-    }
+   
   },
   components: {
     // Discount : Discount
     Discount,
     // Modal
-    Modal
+    Modal,
+    // Card
+    Card,
   }
 }
 </script>
