@@ -4,8 +4,6 @@
       <img :src="oneRoomData[clickNum].image" >
       <h4>{{oneRoomData[clickNum].title}}</h4>
       <p>{{oneRoomData[clickNum].content}}</p>
-      <!-- .addEventListener("click",(e)=>{ /** cocd */})  해당 e가 $event임-->
-      <!-- <input type="text" @input=" month = $event.target.value"> -->
       <!-- 
         상단의 코드 축약버전 모든 input, select 등 value를 알아서 바인딩 해줌 
         단 v-model을 사용 시 초기값이 굉장이 중요함! 숫자로하고 한글을 넣으면 바인딩을 못함 당연한것이지만 기억해두자
@@ -25,6 +23,10 @@ export default {
     data() {
       return {
         month : 1,
+        arr : [1,2],
+        str : "가나다",
+        obj : {name : "yoo", age : 30},
+        bool : false
       }
     },
     props:{
@@ -32,7 +34,18 @@ export default {
       oneRoomData : Array,
       clickNum : Number,
       modalState : Boolean
-    }, 
+    },
+    watch : { // 데이터 감시
+      month(param){ 
+        if(isNaN(param)){
+          alert("숫자를 입력해주세요");
+          this.month = 1;
+        }
+      },
+      bool(param){
+        console.log(param);
+      }
+    } ,
     methods : {
       modalClose(){
         this.$emit("modalClose", false);

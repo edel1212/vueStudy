@@ -578,3 +578,52 @@ export default {
 }
 </script>
 ```
+
+<br/>
+<hr/>
+
+## watch - data()의 데이터가 변경이 일어날 경우 감지
+
+### ⭐️ 단 중요한것은 배열이나 오브젝트와 같은 구조는 감지하지 않음
+
+- 사용하는 방법은 다양한곳에 사용할것 같으나 Validation Check의 경우 상세하게 잡지 못했음
+  - 숫자입력하다가 후에 글자를 입력해도 제대로 동작하지 못함 따로 함수로 구현하는게 나을 듯함
+- data와 watch에서 사용하는 변수명은 👍***같아야 한다.***
+- watch의 파라미터는 2개를 받을 수 있다 . `month(nowVale,beforeVale)` 현재값 , 이전 값 
+```html
+<template>
+    <!--  두가지 tag 모두다 data()의 값을 변경 중임  -->
+    <input type="text" v-model.number = "month" />
+    <button @click="bool = !bool"> test </button>
+    <button @click="arr.push(0)"> test </button>
+    <button @click="obj.age += 100"> test </button>
+</template>
+
+  <script>
+export default {
+    name: "Modal-Component",
+    data() {
+      return {
+        month : 1,
+        arr : [1,2],                        // ❌ 감지 불가능
+        str : "가나다",                       // ❌ 감지 불가능 
+        obj : {name : "yoo", age : 30},     // ❌ 감지 불가능
+        bool : false
+      }
+    },
+    watch : { // 데이터 감시
+      // 👉 데이터와 함수명은 같아야 한다.
+      //month(param,beforeParam){ // 변경 데이터 변경 전 데이터 둘다 받을 수 있음
+      month(param){ // 변경 데이터 변경 전 데이터 둘다 받을 수 있음
+        if(isNaN(param)){
+          alert("숫자를 입력해주세요");
+          this.month = 1;
+        }
+      },
+      bool(param){
+        console.log(param);
+      }
+    } 
+}
+</script>
+```
