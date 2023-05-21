@@ -2,20 +2,11 @@
 
   <div class="menue">
     <a v-for="(item,index) in topMenu" :key="index" href="">
-        {{item}}[{{index}}]
+        {{item}}
     </a>
   </div>
 
-  <div v-if=" 1 === 2">
-    if 문
-  </div>
-  <div v-else-if="1 === 1">
-    else if 문
-  </div>
-  <!-- <div>중간에 끼면 안되네..</div> -->
-  <div v-else>
-    else 문
-  </div>
+  <Discount/>
 
   <div class="itemSection" v-for="(item, index) in oneRoomData" :key="index">    
     <img :src="item.image" class="room-img">       
@@ -25,19 +16,19 @@
   </div>
 
   <!-- Modal -->
-  <div class="black-bg" v-if="modalState">
-    <div class="white-bg">
-      <h4>{{oneRoomData[clickNum].title}}</h4>
-      <p>{{oneRoomData[clickNum].content}}</p>
-      <button @click="this.modalState = false">닫기</button>
-    </div>
-  </div>
+  <Modal/>
 
 </template>
 
 <script>
 
+// Component
+import Discount from "./Discount.vue";
+import Modal from "./Modal.vue"
+
 import dummyData from "./assets/json/dummyData.js"
+
+
 
 export default {
   name: 'App',
@@ -58,6 +49,10 @@ export default {
     }
   },
   components: {
+    // Discount : Discount
+    Discount,
+    // Modal
+    Modal
   }
 }
 </script>
@@ -103,4 +98,10 @@ div {
   border-radius: 8px;
   padding: 20px;
 } 
+.discount{
+   background : #eee;
+   padding : 10px ;
+   margin:10px;
+   border-radius : 5px
+}
 </style>
