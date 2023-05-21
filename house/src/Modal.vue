@@ -6,7 +6,7 @@
       <p>{{oneRoomData[clickNum].content}}</p>
       <p>{{oneRoomData[clickNum].price}}</p>
       <!-- props에서 받아온 데이터는 재할당(변경)이 불가능하다 "read-only" -->
-      <!-- <button @click="this.modalState = false">닫기</button> -->
+      <button @click="modalClose">닫기</button>
     </div>
   </div>
 </template>
@@ -19,6 +19,11 @@ export default {
       oneRoomData : Array,
       clickNum : Number,
       modalState : Boolean
+    }, 
+    methods : {
+      modalClose(){
+        this.$emit("modalClose", false);
+      }
     }
 }
 </script>

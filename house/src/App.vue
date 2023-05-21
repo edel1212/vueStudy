@@ -1,5 +1,6 @@
 <template>
 
+  <!-- Menue -->
   <div class="menue">
     <a v-for="(item,index) in topMenu" :key="index" href="">
         {{item}}
@@ -9,10 +10,11 @@
   <Discount />
 
   <!-- Card -->
-  <Card v-for="(item, idx) in oneRoomData" :key="idx"  v-bind:oneRoomData="oneRoomData[idx]" />
+  <!-- @작명한것="함수 또는 코드" -->
+  <Card @openModal="modalEvent($event)" v-for="(item, idx) in oneRoomData" :key="idx"  v-bind:oneRoomData="oneRoomData[idx]" />
 
   <!-- Modal -->
-  <Modal :oneRoomData="oneRoomData" :clickNum=clickNum :modalState=modalState />
+  <Modal :oneRoomData="oneRoomData" :clickNum=clickNum :modalState=modalState @modalClose="modalState = $event" />
 
 </template>
 
@@ -37,7 +39,10 @@ export default {
     }  
   },
   methods:{   // 함수를 담는곳
-   
+    modalEvent (clickNum){
+      this.modalState = true;
+      this.clickNum = clickNum;
+    }
   },
   components: {
     // Discount : Discount
