@@ -281,6 +281,41 @@ export default {
 </div>
 ```
 
+### v-model 문 **모든 input,select에 사용가능**
+- 다양한 값을 받는 테그에 사용이 가능하다
+- v-model을 사용하지 않아도 `@change, @input, @keydown`등을 사용해서 처리가 가능하나 코드가 길어진다.
+  - 결과값으로  `$event`를 받는대 해당 값은 `.addEventListener("click",(e)=>{ /** cocd */})`의 **e**와 같다 
+- v-model을 사용하면 코드가 간략해지고 직관적이기에 유용하다.
+  - `v-model.자료구조`를 사용해서 조절이 가능하다.
+  - 
+```html
+<template>
+      <!--   👉 @이벤트="" 사용 방법   -->
+      <!-- .addEventListener("click",(e)=>{ /** cocd */})  해당 e가 $event임-->
+      <input type="text" @input=" month = $event.target.value"> 
+      <!-- 
+        상단의 코드 축약버전 모든 input, select 등 value를 알아서 바인딩 해줌 
+        단 v-model을 사용 시 초기값이 굉장이 중요함! 숫자로하고 한글을 넣으면 바인딩을 못함 당연한것이지만 기억해두자
+      -->
+      <input type="text" v-model.number = "month" />
+      <p> {{month}}개월 선택 :  {{oneRoomData[clickNum].price * month }}</p>
+
+</template>
+
+<script>
+export default {
+    name: "Modal-Component",
+    data() {
+      return {
+        // 👉 v-model을 사용시 초기 데이터의 형식을 맞춰주자 안그러면
+        //    바인딩에 문제가 있는 경우가 많음
+        month : 1,
+      }
+    }
+}
+</script>
+
+```
 
 <br/>
 <hr/>

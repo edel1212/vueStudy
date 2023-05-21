@@ -4,7 +4,15 @@
       <img :src="oneRoomData[clickNum].image" >
       <h4>{{oneRoomData[clickNum].title}}</h4>
       <p>{{oneRoomData[clickNum].content}}</p>
-      <p>{{oneRoomData[clickNum].price}}</p>
+      <!-- .addEventListener("click",(e)=>{ /** cocd */})  해당 e가 $event임-->
+      <!-- <input type="text" @input=" month = $event.target.value"> -->
+      <!-- 
+        상단의 코드 축약버전 모든 input, select 등 value를 알아서 바인딩 해줌 
+        단 v-model을 사용 시 초기값이 굉장이 중요함! 숫자로하고 한글을 넣으면 바인딩을 못함 당연한것이지만 기억해두자
+      -->
+      <input type="text" v-model.number = "month" />
+      <p> {{month}}개월 선택 :  {{oneRoomData[clickNum].price * month }}</p>
+
       <!-- props에서 받아온 데이터는 재할당(변경)이 불가능하다 "read-only" -->
       <button @click="modalClose">닫기</button>
     </div>
@@ -14,6 +22,11 @@
 <script>
 export default {
     name: "Modal-Component",
+    data() {
+      return {
+        month : 1,
+      }
+    },
     props:{
       // 받아온 key : 자료형
       oneRoomData : Array,
