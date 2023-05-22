@@ -627,3 +627,135 @@ export default {
 }
 </script>
 ```
+
+<br/>
+<hr/>
+
+## 동적 Class 사용방법
+- Data() 기준으로 해당 값에 따라 addClass, removeClass를 정할 수 있다.
+- `:class{대상이될 class명 : Boolean}`을 사용하여 구분 할 수있다.
+
+```html
+<template>
+
+  <!-- :class=오브젝트형태로 value가 true일 경우 생긴다. -->
+   <div class="start" :class="{end : modalState}">
+    <Modal :oneRoomData="oneRoomData" :clickNum=clickNum :modalState=modalState @modalClose="modalState = $event" />
+  </div>
+  
+</template>
+
+<style>
+  .start{
+    opacity: 0;
+    transition: all 1s;
+  }
+  .end{
+    opacity: 1;
+  }
+</style>
+```
+
+<br/>
+<hr/>
+
+## 동적 Class 사용방법
+
+- `:class="{클래스명 : Boolean}"`을 사용하면 된다.
+- 복수의 class 추가하고 싶다면 `:class="{클래스명 : Boolean, 클래스명2 : Boolean, 클래스명3 : Boolean ....}"`로 늘릴 수 있다
+
+```html
+
+<template>
+  
+  <!-- :class=오브젝트형태로 value가 true일 경우 생긴다. -->
+  <div class="start" :class="{'end' : modalState}">
+    <Modal :oneRoomData="oneRoomData" :clickNum=clickNum :modalState=modalState @modalClose="modalState = $event" />
+  </div>
+  
+</template>
+
+<script>
+  export default {
+    name: 'App',
+    data(){     
+      return {
+        modalState : false,
+      }  
+    },
+    methods:{   },
+    components: {  }
+  }
+</script>
+
+<style>
+  .start{
+    opacity: 0;
+    transition: all 1s;
+  }
+  .end{
+    opacity: 1;
+  }
+</style>
+```
+
+<br/>
+<hr/>
+
+## Vue에서 Dom요소 애니메이션 효과
+- css를 통한 class 사용으로 대처가 가능하다나 알아두자!
+- 설정방법
+  - `<template></template>` 내부에 애니메이션 효과를 주고싶은 곳에 `<transition name="사용될 이름"></tansition>` 태그로 묶어준다.
+    - 중요한 것은 `name=""`에 들어가는 명칭이다. 
+  - `<style></style>` 내부에 css를 추가해준다
+    - 시작일 경우
+      - `사용될이름-enter-from`, `사용될이름-enter-action`, `사용될이름-enter-end`, 3단계로 css를 추가해준다.  
+    - 떠날 경우
+      - `사용될이름-leave-from`, `사용될이름-leave-action`, `사용될이름-leave-end`, 3단계로 css를 추가해준다.
+- 따로 설정이 없어도 해당 태그 내부의 화면에 보이고 안보이고 조건 `v-if`조건에 충족될 경우 애니메이션 효과가 적용된다.
+
+```html
+
+<template>
+
+  <transition name="fade">
+    <Modal v-bind:oneRoomData="oneRoomData" v-bind:clickNum=clickNum v-bind:modalState=modalState @modalClose="modalState = $event" />
+  </transition>
+  
+</template>
+
+<script>
+  export default {
+    name: 'App',
+    data(){     
+      return {
+        modalState : false,
+      }  
+    },
+    methods:{   },
+    components: {  }
+  }
+</script>
+
+<style>
+  .fade-enter-from{ /* 시작 */
+    transform: translateY(-1000px);
+  }
+  .fade-enter-active{
+    transition: all .5s;
+  }
+  .fade-enter-to{ /* 끝 */
+    transform: translateY(0px);
+  }
+  
+  .fade-leave-from{ /* 끝 */
+    opacity: 1;
+  }
+  .fade-leave-active{
+    transition: all 1s;
+  }
+  .fade-leave-to{ /* 시작 */
+    opacity: 0;
+  }
+</style>
+```

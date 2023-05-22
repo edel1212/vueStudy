@@ -13,8 +13,10 @@
   <!-- @작명한것="함수 또는 코드" -->
   <Card @openModal="modalEvent($event)" v-for="(item, idx) in oneRoomData" :key="idx"  v-bind:oneRoomData="oneRoomData[idx]" />
 
-  <!-- Modal -->
-  <Modal :oneRoomData="oneRoomData" :clickNum=clickNum :modalState=modalState @modalClose="modalState = $event" />
+  <!-- 등장 애니메이션 효과 -->
+  <transition name="fade">
+    <Modal v-bind:oneRoomData="oneRoomData" v-bind:clickNum=clickNum v-bind:modalState=modalState @modalClose="modalState = $event" />
+  </transition>
 
 </template>
 
@@ -102,4 +104,32 @@ div {
    margin:10px;
    border-radius : 5px
 }
+.start{
+  opacity: 0;
+  transition: all 1s;
+}
+.end{
+  opacity: 1;
+}
+
+.fade-enter-from{ /* 시작 */
+  transform: translateY(-1000px);
+}
+.fade-enter-active{
+  transition: all .5s;
+}
+.fade-enter-to{ /* 끝 */
+  transform: translateY(0px);
+}
+
+.fade-leave-from{ /* 끝 */
+  opacity: 1;
+}
+.fade-leave-active{
+  transition: all 1s;
+}
+.fade-leave-to{ /* 시작 */
+  opacity: 0;
+}
+
 </style>
