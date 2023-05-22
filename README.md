@@ -85,6 +85,46 @@ export default {
 </template>
 ```
 
+### 추가 정보 +
+- 데이터를 추가 시 methods 나 life cycle 등에서 사용할 함수 변수도 생성이 가능하다.  
+
+```html
+
+<template>
+  <div class="discount">
+    지금 결제하면 {{discountPercent}}% 할인 
+  </div>
+</template>
+
+<script>
+export default {    
+    name: "Discount-Component",
+    data(){      
+        return {
+          discountPercent : 20,
+          // ✅ 함수를 변수로 지정이 가능하다.
+          intervalId : null,
+        }
+    },methods:{
+       discountFunc() {
+       // 👉 data()에 추가한 곳에 변수 할당
+        this.intervalId = setInterval(()=>{
+            this.discountPercent--;       
+            if(this.discountPercent === 0){
+              clearInterval(this.intervalId);
+            } 
+          },100);
+       }      
+    },
+    mounted(){
+      this.discountFunc();
+    }
+}
+</script>
+
+<style></style>
+```
+
 <br/>
 <hr/>
 
@@ -793,7 +833,7 @@ export default {
 ```html
 
 <template>
-  <!-- v-if를 사용하여 UI 보여지고 안보여지고  -->
+  <!-- v-if를 사용하여 UI 보여지고 안보여지고 처리  -->
   <Discount v-if="showDiscount"/>
 
 </template>

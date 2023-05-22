@@ -22,7 +22,7 @@ export default {
     name: "Modal-Component",
     data() {
       return {
-        month : 1,
+        month : 3,
         arr : [1,2],
         str : "가나다",
         obj : {name : "yoo", age : 30},
@@ -35,6 +35,7 @@ export default {
       clickNum : Number,
       modalState : Boolean
     },
+     
     watch : { // 데이터 감시
       month(param){ 
         if(isNaN(param)){
@@ -49,6 +50,12 @@ export default {
     methods : {
       modalClose(){
         this.$emit("modalClose", false);
+      }, 
+    },
+    updated(){
+      if(this.month < 2){
+        alert("2개월 이상만!");
+        this.month = 3;
       }
     }
 }

@@ -7,10 +7,14 @@
     </a>
   </div>
 
-  <Discount />
+  <Discount v-if="showwDiscount"/>
+
+  <button @click="productSort('pa')">가격순 정렬 오름차순</button>  
+  <button @click="productSort('pd')">가격순 정렬 내림차순</button>  
+  <button @click="productSort('na')">이름 정렬</button>
+  <button @click="sortBack">되돌리기</button> 
 
   <!-- Card -->
-  <!-- @작명한것="함수 또는 코드" -->
   <Card @openModal="modalEvent($event)" v-for="(item, idx) in oneRoomData" :key="idx"  v-bind:oneRoomData="oneRoomData[idx]" />
 
   <!-- 등장 애니메이션 효과 -->
@@ -35,8 +39,10 @@ export default {
   data(){     // 데이터를 담는 곳
     return {
       topMenu : ["Home", "Shop", "About"],
+      showwDiscount : true,
       modalState : false,
       oneRoomData : dummyData,
+      oneRoomDataOrigin : [...dummyData],
       clickNum : 0,                  
     }  
   },
@@ -44,6 +50,24 @@ export default {
     modalEvent (clickNum){
       this.modalState = true;
       this.clickNum = clickNum;
+    },
+    productSort(sortType){
+      
+      this.oneRoomData.sort((a,b)=>{
+        if(sortType === "pa"){
+          return b.price - a.price ;
+        } else if(sortType === "pd"){
+          return  a.price - b.price  ;
+        } else{
+          return a.title < b.title ? -1 : a.title > b.title ? 1 : 0;
+        }
+      })
+    },
+    sortBack(){
+      // Array 자료구조는 "="는 덮어씌우는 의미가 아닌 공유의 의미가 된다.
+      // 단 한두번은 괜찮으나 여러번하다보면 썪이기 시작함.
+      // 따라서 ... 방법을 사용하자
+      this.oneRoomData = [...this.oneRoomDataOrigin];
     }
   },
   components: {
