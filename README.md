@@ -759,3 +759,68 @@ export default {
   }
 </style>
 ```
+
+<br/>
+<hr/>
+
+## Life Cycle Hook
+- 컴포넌트는 step별로 생성되며 사라지는 Life Cycle을 갖고 있고 거기에 Hook(중간에 가로채서) 핸들링을 할수있다.
+- 간단하게 축약하자면 vue에서는 html이 생성되가까지의 흐름이 있다
+  - Create 단계 : 데이터만 있는 상태
+  - Mount 단계  : .vue 파일을 => html로 변경되는 단계
+  - update 단계 : data()의 값이 변경 되면 html을 재 랜더링하는 단계
+
+### 사용방법
+- `<script></script>`  내부 Hook 함수를 추가하여 컨트롤한다.
+  - 최초 상태       :: `beforeCreate(){ /** TODO Logic */}` 
+  - 데이터만 있는 상태  :: `created(){ /** TODO Logic */}`      
+  - html 마운트 전  :: `beforeMount(){ /** TODO Logic */}`  
+  - html 마운트 후  :: `mounted(){ /** TODO Logic */}`      
+  - data 업데이트 전 :: `beforeUpdate(){ /** TODO Logic */}` 
+  - data 업데이트 후 :: `updated(){ /** TODO Logic */}`      
+  - 컴포넌트 삭제 전  :: `beforeUnmount(){ /** TODO Logic */}`
+  - 컴포넌트 삭제 후  :: `unmounted() { /** TODO Logic */}`   
+
+### 중요
+- 해당 Hook들은 각각의 파일(컴포넌트)에 따라 실행된다.
+  - ex) Modal.vue에서 `mounted(){}`사용시 Modal 컴포넌트가 다 그려진 후 실행됨 각각의 파일에 따라 실행되는 것이다.
+- 데이터를 가져 올떄 많이 사용된다 
+  - javascript의 `<script defer> (function(){ 초기 값 가져오기  })(); </script>` 와 비슷한 개념이라 보면된다.
+  - `created(){}` 와 `mounted(){}`가 주로 사용 된다.
+    - 정말 간단한 UI에 연관 없어도 되는 데이터를 가져올떄는 `created(){}`
+    - 아닌 경우에는 `mounted(){}`를 사용한다 보면 된다.
+
+```html
+
+<template>
+  <!-- v-if를 사용하여 UI 보여지고 안보여지고  -->
+  <Discount v-if="showDiscount"/>
+
+</template>
+
+<script>
+
+// Component
+import Discount from "./Discount.vue";
+import Modal from "./Modal.vue"
+import Card from "./Card.vue"
+
+// DummyData
+import dummyData from "./assets/json/dummyData.js"
+
+export default {
+  name: 'App',
+  data(){     // 데이터를 담는 곳
+    return {
+      showwDiscount : true,    
+    }    
+  },
+ // 👉 Mount가 된 후 2초 후 상태값 변경
+  mounted(){ 
+    setTimeout(()=>{
+      this.showDiscount = false;
+    },2000)
+  }
+}
+</script>
+```
