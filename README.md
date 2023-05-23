@@ -864,3 +864,24 @@ export default {
 }
 </script>
 ```
+
+<br/>
+<hr/>
+
+## Vue에서 Bootstrap 사용 방법
+
+### Bootstrap 버전이 올라가면서 명렁어가 바뀔 수 있으므로 공식 홈페이지를 참고하자.
+
+- 1 . npm을 통해 bootstrap을 설치한다. `npm install bootstrap@5`
+  - 설치가 완료됐다면 package.json에서 확인이 가능하다.
+- 2 . project - src - main.js에 bootstrap 관련 정보 import 해준다.
+  - `import "bootstrap/dist/css/bootstrap.min.css" // [bootstrap]`
+  - `import "bootstrap" // [bootstrap]`
+    - 💬 main.js란? 
+      -  // 1. 애플리케이션 진입점으로 Vue 초기화, 폴더 , 전역, 컴포넌트 , 라이브러리 등록 수행 실시
+      -  // 2. import App 을 사용해 최상위 App.vue 컴포넌트 지정 실시
+      -  // 3. createApp mount 를 사용해 index.html 파일 div id 값 설정 및 렌더링 시작점 지정 실시
+      -  // 4. router : 라우터는 웹페이지 간의 이동하는 방법 및 경로를 설정해주는 파일입니다
+      -  // 5. app.config.globalProperties : 글로벌 변수를 선언합니다. 변수 명칭은 $변수명칭 을 지정합니다
+
+
