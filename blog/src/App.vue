@@ -26,17 +26,35 @@
     </div>
   </nav>
 
+  <div class="container mt-4">
+    <h5>React Develop</h5>
+    <p>- used Vue -</p>
+  </div>
+
+  <!-- List Component -->
+  <List v-for="(item,idx) in blogData " :key="idx" v-bind:blogDataObj="blogData[idx]"/> 
 
 </template>
 
 <script>
 
+// DummyData
+import dummyData from "./assets/dummyData/dummy";
+
+
+// Component
+import List from "./components/List.vue"
 
 export default {
   name: 'App',
+  data(){
+    return {
+      blogData : dummyData
+    }
+  },
   components: {
-    
-  }
+    List
+  },
 }
 </script>
 
