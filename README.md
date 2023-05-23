@@ -885,3 +885,73 @@ export default {
       -  // 5. app.config.globalProperties : 글로벌 변수를 선언합니다. 변수 명칭은 $변수명칭 을 지정합니다
 
 
+<br/>
+<hr/>
+
+## Vue - Router 
+### Router란?
+- URL별로 화면을 구성하여 나오게 하는것이다.
+
+### 사용 방법
+- 1 . npm을 사용하여 vur-router를 설치한다 . `npm install vue-router@4`
+- 2 . 라우터를 설정할 파일 생성 기본적으로 Router를 사용할 목록을 js파일로 나눠 사용한다.
+
+```javascript
+// router.js
+
+// 👉 import 할 시 from "" 경로가 아닌 라이브러리명을 장성 시 해당 라이브러리를 불러온다
+import { createWebHistory, createRouter } from "vue-router";
+
+// 👉 Router에 불러올 component를 import 해준다.
+import List from "./components/List.vue"
+import Home from "./components/Home.vue"
+
+// 👉 배열<{path : String , component: VueFile}> 형식으로 설정해준다.
+// - path : URL , component : vue 파일
+const routes = [
+  {
+    path: "/list",
+    component: List,
+  },
+  {
+    path: "/",
+    component: Home,
+  },
+];
+
+// 👉 라우터 객체생성
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+// 👉 라우터 export
+export default router;  
+```
+
+- 3 . main.js에 위에서 만든 router 셋팅 .js 파일을 import 해준다.
+  - 3 - 1 . `use(router)`를 추가해준다.
+  
+```javacript
+// main.js
+
+import { createApp } from 'vue'
+import App from './App.vue'
+
+// Add Bootstrap 
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+// 👉 Router를 추가해준다.
+import router from "./router"
+
+createApp(App)
+// 👉 추가한 라우터를 사용
+.use(router)
+.mount('#app')
+```
+
+4 . App.vue에서 `<router-view />` 사용하여 불러온다
+  - 4 - 1 . 데이터를 바인딩하여 전달하고 싶을 경우 부모 컴포넌트 `<router-view v-bind:blogDataArr="blogDataArr" />`
+  - 4 - 2 . 라우팅 대상 자식 컴포넌트에서 스크립트 내부 `props :{ blogDataArr : Array }`를 사용하여 일반 컴퍼넌트에서 데이터 받는 식과  
+똑같이 해결이 가능하다.
