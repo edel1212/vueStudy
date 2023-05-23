@@ -26,13 +26,9 @@
     </div>
   </nav>
 
-  <div class="container mt-4">
-    <h5>React Develop</h5>
-    <p>- used Vue -</p>
-  </div>
 
-  <!-- List Component -->
-  <List v-for="(item,idx) in blogData " :key="idx" v-bind:blogDataObj="blogData[idx]"/> 
+  <!-- Router call -->
+  <router-view v-bind:blogDataArr="blogDataArr" />
 
 </template>
 
@@ -43,17 +39,17 @@ import dummyData from "./assets/dummyData/dummy";
 
 
 // Component
-import List from "./components/List.vue"
+// import List from "./components/List.vue"
 
 export default {
   name: 'App',
   data(){
     return {
-      blogData : dummyData
+      blogDataArr : dummyData
     }
   },
   components: {
-    List
+    //List
   },
 }
 </script>

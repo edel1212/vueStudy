@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h5>{{blogDataObj.title}}</h5>
-    <p>{{blogDataObj.content}}</p>
-    <p>{{blogDataObj.date}}</p>
+  <div v-for="(item,idx) in blogDataArr" :key="idx">
+    <h5>{{item.title}}</h5>
+    <p>{{item.content}}</p>
+    <p>{{item.date}}</p>    
   </div>
   
 </template>
@@ -16,7 +16,7 @@ export default {
         }
     },
     props :{
-        blogDataObj : Object
+        blogDataArr : Array
     }
 }
 </script>

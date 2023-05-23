@@ -5,4 +5,9 @@ import App from './App.vue'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-createApp(App).mount('#app')
+// Router import
+import router from "./router"
+
+createApp(App)
+.use(router)
+.mount('#app')
