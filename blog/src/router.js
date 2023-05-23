@@ -4,6 +4,7 @@ import { createWebHistory, createRouter } from "vue-router";
 // Router에 import할 component를 추가
 import List from "./components/List.vue"
 import Home from "./components/Home.vue"
+import Detail from "./components/Detail.vue"
 
 /**
  * path에 맞는 url 접속 시 지정된 component로 이동 시켜준다.
@@ -16,6 +17,14 @@ const routes = [
   {
     path: "/",
     component: Home,
+  },
+  {
+    path: "/Detail/:id",
+    component: Detail,
+  },
+  {
+    path: "/:anyting",
+    component: Detail,
   },
 ];
 

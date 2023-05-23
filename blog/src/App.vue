@@ -26,9 +26,19 @@
     </div>
   </nav>
 
+  <!-- Router Link -->
+  <p>
+    <router-link to="/"><p>홈</p></router-link>
+  </p>
+  
+  <p>
+    <router-link to="/list">목록</router-link>
+  </p>
 
   <!-- Router call -->
+  <div class="mt-4">
   <router-view v-bind:blogDataArr="blogDataArr" />
+  </div>
 
 </template>
 

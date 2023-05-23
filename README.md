@@ -955,3 +955,85 @@ createApp(App)
   - 4 - 1 . 데이터를 바인딩하여 전달하고 싶을 경우 부모 컴포넌트 `<router-view v-bind:blogDataArr="blogDataArr" />`
   - 4 - 2 . 라우팅 대상 자식 컴포넌트에서 스크립트 내부 `props :{ blogDataArr : Array }`를 사용하여 일반 컴퍼넌트에서 데이터 받는 식과  
 똑같이 해결이 가능하다.
+
+<br/>
+<hr/>
+
+## Vue - Router 파라미터 전달
+
+### 주의사항
+- routes에서의 순서가 중요하다.
+  - `/:anyting`을 사용하면 모든 url에 걸릴것 같지만 순서대로 실행되기에 가장 마지막에 두면 마지막에 사용된다. 
+- 다양한 방법으로 사용이가능하다
+  - `/:anyting(정규식)` 정규식 사용이 가능
+  - 내부 함수를 사용하여 추가 및 삭제도 가능
+  - 필요한 것은 그떄그때 공식 홈페이지에서 확인하는것이 좋다
+
+### 사용방법
+- router를 설정하는 js 파일에서 path설정 부분에  `/:내가지정할 이름`을 사용하여 추가 해준다.
+- 해당 파라미터를 사용하는 컴포넌트에서 `$route`를 사용하면 여러가지 값을 불러와 사용할 수 있다. 
+  - fullPath, hash, matched, meta, name, params, path, query, redirectedFrom
+
+✅ router.js
+```javascript
+
+import { createWebHistory, createRouter } from "vue-router";
+
+// Router에 import할 component를 추가
+import Detail from "./components/Detail.vue"
+
+/**
+ * path에 맞는 url 접속 시 지정된 component로 이동 시켜준다.
+ */
+const routes = [
+  {
+    // 👉 ":id"를 통해 파라미터 지정
+    path: "/Detail/:id",
+    component: Detail,
+  },
+  // 👉 순서가 중요하므로 /Details과 겹치지만 여기까지 오지 않는다!
+  {
+    path: "/:anyting",
+    component: 404Page,
+  },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router; 
+```
+
+✅ Detail.vue - "/Details/값"으로 전달 받은 컴포넌트
+```html
+<template>
+    <!--  router.js에서 :id 지정했기에 .id로 불러와 사용 가능    -->
+    <h4>{{blogDataArr[routeData.params.id]?.title}}</h4>
+    <p>{{blogDataArr[routeData.params.id]?.content}}</p>
+    <p>{{blogDataArr[routeData.params.id]?.date}}</p>
+    <!--  👉 아래외 같이 사용하면 값을 알 수 있음  -->
+    {{$route}}
+</template>
+
+<script>
+export default {
+    name : "Detail-Component",
+    data(){
+        return {
+            // 👉 this.$route 를 사용하면 변수에 할당이 가능하다
+            routeData : this.$route
+        }
+    },
+    props : {
+        blogDataArr : Array        
+    },
+    mounted(){
+        console.log(this.routeData);
+    }
+}
+</script>
+
+<style></style>
+```

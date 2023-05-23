@@ -1,6 +1,9 @@
 <template>
   <div v-for="(item,idx) in blogDataArr" :key="idx">
-    <h5>{{item.title}}</h5>
+    <router-link to="/Detail">
+      <h5>{{item.title}}</h5>
+    </router-link>
+    
     <p>{{item.content}}</p>
     <p>{{item.date}}</p>    
   </div>
@@ -17,6 +20,8 @@ export default {
     },
     props :{
         blogDataArr : Array
+    },methods :{
+  
     }
 }
 </script>
