@@ -6,6 +6,10 @@ import List from "./components/List.vue"
 import Home from "./components/Home.vue"
 import Detail from "./components/Detail.vue"
 
+// Child Router import
+import Author from "./components/Author.vue"
+import Comment from "./components/Comment.vue"
+
 /**
  * path에 맞는 url 접속 시 지정된 component로 이동 시켜준다.
  */
@@ -21,11 +25,19 @@ const routes = [
   {
     path: "/Detail/:id",
     component: Detail,
+    children :  [
+      // ✅ '/'를 뺴줘여함 상대경로로 해야한다.
+      {
+        path : "author",
+        component : Author
+      },
+      {
+        path : "comment",
+        component : Comment
+      },
+    ]
   },
-  {
-    path: "/:anyting",
-    component: Detail,
-  },
+  
 ];
 
 const router = createRouter({

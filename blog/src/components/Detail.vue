@@ -2,6 +2,9 @@
     <h4>{{blogDataArr[routeData.params.id]?.title}}</h4>
     <p>{{blogDataArr[routeData.params.id]?.content}}</p>
     <p>{{blogDataArr[routeData.params.id]?.date}}</p>    
+
+    <!-- child router call -->
+    <router-view></router-view>
 </template>
 
 <script>
@@ -16,7 +19,7 @@ export default {
         blogDataArr : Array        
     },
     mounted(){
-        console.log(this.routeData);
+        //console.log(this.routeData);
     }
 }
 </script>

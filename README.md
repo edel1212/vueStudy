@@ -959,7 +959,7 @@ createApp(App)
 <br/>
 <hr/>
 
-## Vue - Router 파라미터 전달
+## Vue - Route 파라미터 전달
 
 ### 주의사항
 - routes에서의 순서가 중요하다.
@@ -968,6 +968,8 @@ createApp(App)
   - `/:anyting(정규식)` 정규식 사용이 가능
   - 내부 함수를 사용하여 추가 및 삭제도 가능
   - 필요한 것은 그떄그때 공식 홈페이지에서 확인하는것이 좋다
+  - redirect도 사용가능
+  - 컴포넌트도 각각 조각내어 사용 가능
 
 ### 사용방법
 - router를 설정하는 js 파일에서 path설정 부분에  `/:내가지정할 이름`을 사용하여 추가 해준다.
@@ -1036,4 +1038,83 @@ export default {
 </script>
 
 <style></style>
+```
+
+<br/>
+<hr/>
+
+## Vue - Route를 사용한 페이지 이동
+
+- 방법 1 : `<router-link to="내가 사용할 링크"></router-link>`
+  -  **:to="'url' + data"** 를 사용하면 데이터값을 추가해서 사용이 가능하다.
+    - ex)  `<router-link :to="'/Detail/' + idx"></router-link>`
+- 방법 2 : `@click="$router.push('URL')"` 
+  - ex)  `<h5 @click="$router.push('/detail/'+idx)">{{item.title}}</h5>` 
+- 번외 : `<h5 @click="$router.go(-1)">뒤로가기 [숫자에 따라 페이지 개수 지정 가능]</h5>` 페이지 앞, 뒤 이동도 가능함
+
+### 주의사항
+- `$route`와 `$router`는 다른 명렁어이다!
+  - `$route`는 데이터 또는 path정보를 가져옴
+- `$router`는 페이지 이동등을 시킬 수 있음
+
+<br/>
+<hr/>
+
+## Vue - Route의 자식 Route 사용 방법 
+
+#### `"/detail/1/author"`, `"/detail/1/comment"`와 같이 Url을 이어서 사용 하는것이다.
+
+### 사용 방법
+- router 설정한 .js파일에 추가해 주면된다.   
+  - 주의사항 : 절대경로가 아닌 상대경로로 지정해줘야한다.
+
+✅ Router.js
+```javascript
+import { createWebHistory, createRouter } from "vue-router";
+
+// Router에 import할 component를 추가
+import List from "./components/List.vue"
+import Home from "./components/Home.vue"
+import Detail from "./components/Detail.vue"
+
+// Child Router import
+import Author from "./components/Author.vue"
+import Comment from "./components/Comment.vue"
+
+/**
+ * path에 맞는 url 접속 시 지정된 component로 이동 시켜준다.
+ */
+const routes = [
+  {
+    path: "/list",
+    component: List,
+  },
+  {
+    path: "/",
+    component: Home,
+  },
+  {
+    path: "/Detail/:id",
+    component: Detail,
+    children :  [
+      // ✅ '/'를 뺴줘여함 상대경로로 해야한다.
+      {
+        path : "author",
+        component : Author
+      },
+      {
+        path : "comment",
+        component : Comment
+      },
+    ]
+  },
+  
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router; 
 ```
