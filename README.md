@@ -1118,3 +1118,151 @@ const router = createRouter({
 
 export default router; 
 ```
+
+<br/>
+<hr/>
+
+## Vue - Router Mode
+
+
+#### mode의 종류는 2가지가 있다
+- 1 . History Mode
+
+✅ Router.js - HistoryMode
+```javascript
+import { createWebHistory, createRouter } from "vue-router";
+
+const routes = [/** component */ ];
+
+const router = createRouter({
+  // 👉 모드 지정
+  history: createWebHistory(),
+  routes,
+});
+
+export default router; 
+```
+
+- 2 . Hash Mode
+
+✅ Router.js - HashMode
+```javascript
+import { createWebHashHistory, createRouter } from "vue-router";
+
+const routes = [/** component */ ];
+
+const router = createRouter({
+  // 👉 모드 지정
+  history: createWebHashHistory(),
+  routes,
+});
+
+export default router; 
+```
+
+### 사실상 Hash 모드는 SEO 문제와 URL 자체에 "#"이 들어가는 문제가있어  개인적으로는 지양한다
+
+- 그래도 사용하는 이유는 vue에서 라우팅 전에 서버가 채가는것을 방지함
+  - /*/가 url 뒤에 붙으면 서버에 내용이 전달되지 않기 때문이다. 
+
+<br/>
+<hr/>
+
+## Vue - Navigation guards
+
+### 특정 URL로 접근 시 실행 시켜야할 로직이 있을 경우 사용
+- hook과 유사하나 차이점이 있다면 hook의 경우는 라이프사이클 훅으로 내가 설정한 훅의 조건에  따라 실행되는 반면에  
+`beforeEnter`는 Vue 라우터의 네비게이션 가드로서 라우트 진입전에 실행되고 어떠한 경로로 들어왔는지 알수있다.
+- 네이게이션가드의 경우 특정 조건에 따라 라우트 진입을 허용 또는 방지 할수 있기에 사용자 인증 사앹를 확인하거나 특정 데이터를  
+로드하는데 사용된다.
+- 단 해당 방법은 javascript로 실행 되기에 서버단에서도 조치를 해줘야한다.
+
+#### `return false`를 통해 접근을 방지 할 수 있다.
+
+### 사용 방법 - 1
+
+- Router 설정 파일에서의 설정
+
+✅ Router.js 
+```javascript
+import { createWebHistory, createRouter } from "vue-router";
+
+const routes = [
+  {
+    path: "/list",
+    component: List,
+    // ✅ beforeEnter를 사용하여 네비게이션 사용
+    beforeEnter: (to, from) => {
+      console.log(to);    // 💬 목적지 정보
+      console.log(from);  // 💬 출발지 정보
+      return false;       // 💬 튕겨내기가 가능하다
+    }
+  },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router; 
+```
+
+### 사용 방법 - 1 - 2
+
+- Router 설정 파일에서의 설정 - 복수 지정
+
+✅ Router.js
+```javascript
+import { createWebHistory, createRouter } from "vue-router";
+
+const routes = [
+  {
+    path: "/list",
+    component: List
+  },
+  {
+    // Code..
+  }
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+// router에 적용
+router.beforeEach((to, from) => {
+  //페이지 변경 전에 실행할 코드
+})
+
+export default router; 
+```
+
+### 사용 방법 - 2
+- vue 파일 내부에서의 네비게이터 가드 사용 방법  
+
+✅ 적용하고 싶은 Vue 파일
+```html
+<template></template>
+
+<script>
+export default {
+    name : "List-Component",
+    data(){ return { } },
+    props :{ }
+    ,methods :{ }
+    // ✅ beforeRouteEnter()를 사용하여 접근
+    , beforeRouteEnter (to, from) {
+      console.log("----------------");
+      console.log("해당 Vue 파일에서의 네이게이터 가드 접근");
+      console.log(to);
+      console.log(from);
+      console.log("----------------");
+    }
+}
+</script>
+
+<style></style>
+```
+

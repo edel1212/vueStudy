@@ -1,5 +1,6 @@
 // from "" 경로가 아닌 라이브러리명을 기입 시 라이브러리를 불러온다!
 import { createWebHistory, createRouter } from "vue-router";
+//import { createWebHashHistory, createRouter } from "vue-router";
 
 // Router에 import할 component를 추가
 import List from "./components/List.vue"
@@ -17,6 +18,11 @@ const routes = [
   {
     path: "/list",
     component: List,
+    beforeEnter: (to, from) => {
+      console.log(to);    // 목적지 정보
+      console.log(from);  // 출발지 정보
+      //return false; // 튕겨내기가 가능하다
+    }
   },
   {
     path: "/",
@@ -42,7 +48,9 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
+  //history: createWebHashHistory(),
   routes,
 });
+
 
 export default router; 

@@ -30,6 +30,12 @@ export default {
         blogDataArr : Array
     },methods :{
   
+    }, beforeRouteEnter (to, from) {
+      console.log("----------------");
+      console.log("해당 Vue 파일에서의 네이게이터 가드 접근");
+      console.log(to);
+      console.log(from);
+      console.log("----------------");
     }
 }
 </script>
