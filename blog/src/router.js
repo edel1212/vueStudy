@@ -18,11 +18,6 @@ const routes = [
   {
     path: "/list",
     component: List,
-    beforeEnter: (to, from) => {
-      console.log(to);    // 목적지 정보
-      console.log(from);  // 출발지 정보
-      //return false; // 튕겨내기가 가능하다
-    }
   },
   {
     path: "/",
