@@ -1266,3 +1266,50 @@ export default {
 <style></style>
 ```
 
+<br/>
+<hr/>
+
+## Slot 
+
+### Slot 이란?
+- props을 사용하지 않아도 부모의 데이터를 자식에게 넘겨줄수 있다.
+- 간단하게 화면에 보여줄 데이터라면 활용하기 좋다.
+
+### 장점 
+- 직관적이다.
+- html 태그 자체로도 넘겨줄 수 있다.
+- 간단하다.
+
+### 단점
+- 갯수가 많아지면 점점 복잡해진다.
+- 자식 자체에서 html태그 자체게 개입이 불가능하다 :class , :id, v-for문 등등.
+
+### 사용방법
+- 부모 컴포넌트에서 자식 컴포넌트를 호출시 `<자식컴포넌트>여기에다 데이터를 넣으면 전달 됩니다.</자식입니다.>` 방법으로 전달
+- 자식 컴포넌트에서는 `<slot></slot>` 하나만 넣어주면 해당 위치에 넘겨준 값이 들어온다.
+
+
+- 다건의 `slot`을 사용하고 싶은 경우
+  - 부모 컴포넌트 
+    - `<template v-slot:내가 지정한 이름>`을 부모 컴포넌트에서 지정을 해주고
+  - 자식 컴포넌트
+    - `<slot name ="a"></slot>`부모에서 넘겨주는 이름을 맞춰서 **name**에 맞춰준다.  
+    
+✅ 부모 컴포넌트
+```html
+<template>
+    <FilterBox v-bind:updateImgURL="updateImgURL" v-bind:filterArr="filterArr">
+        <template v-slot:a><h1>1</h1></template>
+        <template v-slot:b>2</template>
+    </FilterBox>
+</template>
+```
+✅ 자식 컴포넌트
+```html
+<template>
+  <!-- 슬롯 생성  -->
+  <slot name ="a"></slot>
+  <slot name ="b"></slot>
+</template>
+</template>
+```

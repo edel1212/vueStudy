@@ -7,14 +7,12 @@
 
   <!-- 필터선택페이지 -->
   <div v-if="tapStep == 1">
-    
     <div class="upload-image" :style="`background-image : url(${updateImgURL})`"></div>
     <div class="filters">
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
-        <div class="filter-1"></div>
+        <FilterBox v-bind:updateImgURL="updateImgURL" v-bind:filterArr="filterArr">
+            <template v-slot:a><h1>1</h1></template>
+            <template v-slot:b>2</template>
+        </FilterBox>
     </div>  
   </div>
   
@@ -31,14 +29,20 @@
 
 <script>
 import Post from "/src/components/Post.vue"
+import FilterBox from "/src/components/FilterBox.vue"
 export default {
     data(){
         return {
+            filterArr : [ "aden", "_1977", "brannan", "brooklyn", "clarendon", "earlybird", "gingham", "hudson", 
+                            "inkwell", "kelvin", "lark", "lofi", "maven", "mayfair", "moon", "nashville", "perpetua", 
+                            "reyes", "rise", "slumber", "stinson", "toaster", "valencia", "walden", "willow", "xpro2"],
+
         }
     },
     name : "ContainerComponent"
     ,components :{
         Post,
+        FilterBox,
     },
     props : {
         instaDataArr : Array,
