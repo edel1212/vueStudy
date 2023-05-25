@@ -10,17 +10,10 @@
     <img src="./assets/logo.png" class="logo" />
   </div>
 
-  <h4>안녕 {{$store.state.name}}</h4>
-  <!--  ✅ 이런식으로 변경하면 안된다!! -->
-  <button @click=" $store.state.name = 'yoo' ">store 값 변경</button>
-  
-  <!-- 
-    Comonent를 사용해도 되나 Router를 사용해야하는이유
-    - 👉 뒤로가기 버튼 떄문이다. [중요!]
-   -->
+  <!-- Comonent를 사용해도 되나 Router를 사용해야하는이유
+    - 👉 뒤로가기 버튼 떄문이다. [중요!] -->
   <Container v-bind:instaDataArr="instaDataArr" v-bind:tapStep="tapStep"
    v-bind:updateImgURL="updateImgURL" @write="content = $event" v-bind:filter="filter"/>
-
 
   <!-- 더보기 버튼 -->
   <button @click="more">더보기</button>
@@ -33,32 +26,18 @@
     </ul>
  </div>
 
-<div @click="tapClick">
-  <button data-idx="0">내용0</button>
-  <button data-idx="1">내용1</button>
-  <button data-idx="2">내용2</button>
-</div>
-<div sytle="margin-top:500px"></div>
-
-
 </template>
 
 <script>
 
-// DummyData import
-import instaDataArr from "./assets/dummyData/dummyData"
-
 // Component import
 import Container from "./components/Container.vue";
-
-// Axios import
-import Axios from "axios";
 
 export default {
   name: 'App',
   data (){
     return {
-      instaDataArr,
+      instaDataArr : this.$store.state.instaDataArr,
       btnCnt : 0,
       tapStep : 0,
       updateImgURL : '',
@@ -75,26 +54,7 @@ export default {
       // Btn Count에 따른 URL 변화
       let parBtnCnt = this.btnCnt%2;
       this.btnCnt ++;
-
-      /**
-       * Axios에서는 Data을 가져올 경우 .data를 통해 JSON으로 반환 받는다.
-       * - fetch 경우 .json()임 차이가 있음 잊지말자
-       */
-      Axios.get(`https://codingapple1.github.io/vue/more${parBtnCnt}.json`)
-      .then((res)=>res.data)
-      .then((result)=>{        
-        // Vue는 실시간 재 랜더링을 해주므로 
-        // data에 추가만 해주면 된다.
-        this.instaDataArr.push(result);
-      }).catch(err=>{
-        console.log(err);
-      });
-      
-    },
-    /** 탭버튼 Event */
-    tapClick(e){      
-      if(e.target.nodeName !== 'BUTTON') return;
-      this.tapStep = e.target.dataset.idx;
+      this.$store.dispatch("addInstaData", parBtnCnt);
     },
     /** 파일 업로드 */
     imagUpload(e){
@@ -120,9 +80,8 @@ export default {
         liked: false,
         content: this.content,
         filter: this.filter
-      };
-      // 👉 unshift() << 왼쪽에 데이터를 추가
-      this.instaDataArr.unshift(registerData);
+      };      
+      this.$store.commit("publish",registerData);
       // 스탭 초기화
       this.tapStep = 0;
     }

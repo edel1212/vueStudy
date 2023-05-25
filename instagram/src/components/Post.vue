@@ -4,7 +4,7 @@
       <div class="profile" :style="{'background-image' : `url(${instaData.userImage})`}"></div>
       <span class="profile-name">{{instaData.name}}</span>
     </div>
-    <div :class="instaData.filter" class="post-body" :style="{'background-image' : `url('${instaData.postImage}')`}"></div>
+    <div @click="addLike" :class="instaData.filter" class="post-body" :style="{'background-image' : `url('${instaData.postImage}')`}"></div>
     <div class="post-content">
       <p>{{instaData.likes}} Likes</p>
       <p><strong>{{instaData.name}}</strong> {{instaData.content}}</p>
@@ -19,6 +19,11 @@ export default {
     props : {
         instaData : Object,
         filter : String
+    },
+    methods :{
+        addLike(){
+            this.$store.commit("addLike");
+        }
     }
 }
 </script>
