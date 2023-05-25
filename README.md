@@ -1606,3 +1606,166 @@ export default store
   <button @click="$store.dispatch('getData')">더 보기</button> 
 </template>
 ```
+
+<br/>
+<hr/>
+
+## computed 
+
+### computed란 ?
+- methods 와 비슷하게 함수를 정의해 놓을 수있다.
+- 단! Vue 컴포넌트 내에서 **계산된 속성을 정의하는 데 사용된다.**
+  - 해당 메서드를 호출하여도 **초기 로드 시 지정되어 있는 값을 반환**한다.
+
+### methods 와 components 와 computed 차이는?
+- 간단하게 설명
+  - methods : 실행 시 마다 내부 코드 재실행
+  - components : 초기 로드시 저장되어 있는 값 호출 
+    - **반드시 return**이 필요함 
+
+### 사용 방법 
+- `computed : {}`을 선언하고 내부에 반환값이 있는 함수를 사용하면 된다.
+
+```html
+<template>
+  
+  <!-- 👉 랜더링 때마다 읽어서 업데이트 -->
+  <p>{{now()}}</p>
+  <!--  👉  랜더링 때마다 호출은하나 메서드 호출해도 처음 지정값을 반환 -->
+  <p>{{now2}}</p>
+  
+  <p> {{counter}}</p>
+  <button @click="counter++">재 랜더링을 위한 함수</button>
+  
+
+</template>
+
+<script>
+export default {
+  name: 'App',
+  // 👉 호출 시 새로운 날짜로 업데이트됨 초가 늘어남 
+  methods : {
+    now(){
+      return new Date();
+    }
+  },
+  // 👉 computed 추가 - 처음 값 그대로 계속 반화
+  computed : { 
+    now2(){
+      return new Date();
+    },
+  }
+}
+</script>
+
+<style></style>
+```
+<br/>
+<hr/>
+
+## computed - 활용 mapMutations, mapState, mapActions 등등...
+
+
+### mapState, mapMutations, mapActions 란?
+- 3가지의 공통점은 vuex의 사용 되는 함수 호출 또는 값 사용 코드를 축약해준다는 것이다.
+  - **mapState** 란? :  vuex의 state() **데이터에** 쉽게 접근이 가능
+    - 기존 : `$store.state.내가지정한 이름`을 통해 값을 가져옴
+    - 변경 : ✅ `computed : {}` 내부 함수 선언 후 `...mapState(['내가정한이름1','내가정한이름2', '내가정한이름3',...])`을 사용해 가져옴
+  - **mapMutations** 란? :  vuex의 state() **데이터 변경** 함수에 쉽게 접근이 가능
+    - 기존 : `$store.commit("지정함수명",파라미터);`를 통해 state()값을 변경 했음
+    - 변경 : ✅ `methods : {}` 내부 함수 선언 후 `...mapMutations(["내가정한이름1", "내가정한이름2", ...])`을 사용해 가져옴
+  - **mapActions** 란? :  vuex의 **비동기 통신** 사용 시 호출되는 함수에 쉽게 접근이 가능
+    - 기존 : `$store.dispatch("지정함수명",파라미터);`를 통해 비동기 통신 함수 접근 
+    - 변경 : ✅ `methods : {}` 내부 함수 선언 후 `...mapActions(["내가정한이름1", "내가정한이름2", ...])`을 사용해 가져옴
+
+### 사용방법
+- 1 .  `import {mapMutations, mapState, mapActions} from "vuex"`를 import 해준다.
+- 2 . 사용할 컴포넌트의 스크립트에 mapState의 경우는 `computed : {}`에 설정해주고 mapMutations, mapActions는 `methods : {}`에 설정해준다.
+
+✅ store.js
+```javascript
+import { createStore } from 'vuex';
+import axios from 'axios';
+
+const store = createStore({
+  state(){
+    return {
+      name : "kim",
+      age : 20,
+    }
+  },
+
+  /**데이터 수정하는 방법 정의 */
+  mutations:{
+    changeName(state){
+        state.name = 'yoojh~!'
+    },
+    addAge(state, param){
+        state.age += param;
+    },
+  },
+  /** ajax요청을 받는곳 - 비동기 요청을 받는다 */
+  actions :{
+    getData(contenxt){
+        axios.get(`https://codingapple1.github.io/vue/more0.json`)
+        .then((res)=>res.data)
+        .then((result)=>{
+            // 뮤테이션 함수 이용
+            contenxt.commit('setMore',result);
+            
+            console.log(contenxt.rootState);
+            console.log(contenxt.state);
+        })
+    },
+  }
+
+})
+
+export default store
+```
+
+✅ map...을 사용할 .vue
+```html
+<template>
+
+  {{name}}
+  {{age}}
+  {{내가정한이름}}
+
+  <button @click="$store.commit('addAge',14)">나이 증가</button>
+  <button @click="addAge(14)">나이 증가[mapMutations 사용]</button>
+
+
+ <button @click="counter++">재실행</button>
+
+</template>
+
+<script>
+
+// Component import
+import Container from "./components/Container.vue";
+
+// mapState import - {} 필수
+import {mapMutations, mapState} from "vuex";
+
+export default {
+  name: 'App',
+  methods : {
+    // 👉 ...mapMutations([])를 사용하여 값에 메서드를 가져옴
+    ...mapMutations(["changeName", "addAge"]),
+  },
+  computed : { 
+    // 👎 코드가 너무 김
+    name(){
+      return this.$store.state.name;
+    },
+    // 👍 ...mapState([]) 배열 형태로 값을 가져올 수 있음
+    ...mapState(['name','age', 'likes']), // 한번에 끄내씀
+    // 👍 ...mapState({}) Object 형태로 내가 키값을 지정 가능함
+    ...mapState({ "내가정한이름" : 'name'}), // 한번에 끄내씀
+  },
+}
+</script>
+
+<style></style>
+```

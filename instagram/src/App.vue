@@ -10,6 +10,23 @@
     <img src="./assets/logo.png" class="logo" />
   </div>
 
+  <!-- 랜더링 때마다 읽어서 업데이트 -->
+  <p>{{now()}}</p>
+  <!-- 랜더링 때마다 호출은하나 메서드 호출해도 처음 지정값을 반환 -->
+  <p>{{now2}}</p>
+  <p> {{counter}}</p>
+
+  {{name}}
+  {{age}}
+  {{내가정한이름}}
+
+  <button @click="$store.commit('addAge',14)">나이 증가</button>
+  <button @click="addAge(14)">나이 증가[mapMutations 사용]</button>
+
+
+ <button @click="counter++">재실행</button>
+
+
   <!-- Comonent를 사용해도 되나 Router를 사용해야하는이유
     - 👉 뒤로가기 버튼 떄문이다. [중요!] -->
   <Container v-bind:instaDataArr="instaDataArr" v-bind:tapStep="tapStep"
@@ -33,6 +50,9 @@
 // Component import
 import Container from "./components/Container.vue";
 
+// mapState import - {} 필수
+import {mapMutations, mapState} from "vuex";
+
 export default {
   name: 'App',
   data (){
@@ -42,13 +62,17 @@ export default {
       tapStep : 0,
       updateImgURL : '',
       content : '',
-      filter : ''
+      filter : '',
+      counter : 0
     }
   },
   components: {
     Container
   },
   methods : {
+
+    ...mapMutations(["changeName", "addAge"]),
+
     /** 더 보기 */
     more(){
       // Btn Count에 따른 URL 변화
@@ -84,7 +108,23 @@ export default {
       this.$store.commit("publish",registerData);
       // 스탭 초기화
       this.tapStep = 0;
+    },
+    now(){
+      return new Date();
     }
+  },
+  // 값을 간직함 호출해도 재실행이 아닌 처음 읽은 그대로의 값을 반환 - 계산 결과저장용 함수
+  // return은 필수임 없으면 Error
+  computed : { 
+    now2(){
+      return new Date();
+    },
+    // store의 데이터를 가져다쓸때 사용
+    name(){
+      return this.$store.state.name;
+    },
+    ...mapState(['name','age', 'likes']), // 한번에 끄내씀
+    ...mapState({ "내가정한이름" : 'name'}), // 한번에 끄내씀
   },
   mounted(){
     // "내가 지정한 이벤트명"
