@@ -1823,6 +1823,7 @@ export default {
 
 <script setup>
     // 👉 TODO 여기다 작성해도 setup()에 작성과 똑같음
+    // 단 둘다 있을경우 setup(){} 이 실행이 안되는 문제가 있다 하나만 쓰자!
 </script>
 
 <style></style>
@@ -1855,6 +1856,7 @@ export default {
         // 👍 값을 확인 할 수 있음
         console.log(follower.value);
         
+        //👉 return 시에는 자동으로 ".value"로 치환되어 반환된다.
         return {follower, test};
     }
 }
