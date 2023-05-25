@@ -23,6 +23,16 @@
 | 프로젝트 서버실행 | `npm run serve`      |
 | 프로젝트 빌드  | `npm run build`      |
 
+
+<br/>
+<hr/>
+
+## Vue 디버깅 크롬 확장 프로그램
+
+- 크롬 웹스토어 이동
+- Vue.js devtools 설치
+- 개발자 도구 실행시 vue 탭이 생긴 것을 확인 할 수 있다.
+
 <br/>
 <hr/>
 
@@ -1706,17 +1716,17 @@ const store = createStore({
   },
   /** ajax요청을 받는곳 - 비동기 요청을 받는다 */
   actions :{
-    getData(contenxt){
-        axios.get(`https://codingapple1.github.io/vue/more0.json`)
-        .then((res)=>res.data)
-        .then((result)=>{
-            // 뮤테이션 함수 이용
-            contenxt.commit('setMore',result);
-            
-            console.log(contenxt.rootState);
-            console.log(contenxt.state);
-        })
-    },
+    addInstaData(contenxt, parBtnCnt){
+      axios.get(`https://codingapple1.github.io/vue/more${parBtnCnt}.json`)
+      .then((res)=>res.data)
+      .then((result)=>{        
+        // Vue는 실시간 재 랜더링을 해주므로 
+        // data에 추가만 해주면 된다.        
+        contenxt.commit("addInstaDate",result);
+      }).catch(err=>{
+        console.log(err);
+      });
+    }
   }
 
 })
@@ -1753,6 +1763,7 @@ export default {
   methods : {
     // 👉 ...mapMutations([])를 사용하여 값에 메서드를 가져옴
     ...mapMutations(["changeName", "addAge"]),
+    ...mapActions(["addInstaData"]),
   },
   computed : { 
     // 👎 코드가 너무 김
@@ -1768,4 +1779,280 @@ export default {
 </script>
 
 <style></style>
+```
+
+<br/>
+<hr/>
+
+## Composition API 방법
+
+### Composition API이란?
+- 사실상 이름만 API일뿐이지 개발 스타일이 다른것이다
+- 한곳에 method, data, watch, mounted, props를 뭉쳐서 사용 가능하게 사용하는 방식이다.
+- 앞서 개발했던 각각의 항목을 만들어 개발하는 방식을 **Options API**방식이였다.
+  - 해당 방식은 규모가 커지고 관리해야하는 method, data, watch, mounted, props ... 등등 너무 많아지는 문제가 있다.
+
+### 장점은 ?
+- 구조가 나눠져 있지 않아서 원하는 로직은 한곳에서 몰아서 구현이 가능하다는 장점이 있다.
+
+### 단점은 ?
+- 아직 mapMutations, mapState가 사용이 불가능하다.
+
+
+### 사용 방법
+- 1 . 사용하려는 .vue 스크립트 내부에 `setup(){}`을 추가
+  - 1-1 . `<script setup></script>`로 작성해도 된다. 👍 해당 방법은 return 없이도 `<template></template>`에서 사용 가능
+- 2  . 각각에 필요한 함수들은 import 시킨 후 `setup(){}`에서 불러와서 사용
+- 3 . 사용할 화면에서 사용할 변수,함수는 `return {}`에 담아서 전달 단 **\<script setup\>** 사용 시 return 불필요
+
+### Composition API 사용 시 기본 틀
+
+✅ Composition API를 적용할 vue
+```html
+<template></template>
+
+<script>
+export default {
+    name : "myPage",
+    // 👉 Composition API 방식은 setup(){} 내부에 코드를 작성하면된다.
+    setup(){
+        return {};
+    }
+}
+</script>
+
+<script setup>
+    // 👉 TODO 여기다 작성해도 setup()에 작성과 똑같음
+</script>
+
+<style></style>
+```
+
+### Composition API - 변수에 값 할당 방법
+
+- **주의사항**
+  - 변수를 할당할 경우 꼭  `ref(넣을값)` 혹은 `reactive()`을 사용해줘야한다.
+    -  vue에서 실시간 렌더링이 가능한 이유는 ***reference Data*** 때문이므로 setup()는 `created`와 같게 움직이기에 첫 데이터만 있는 상태이다  
+    따라서 ref, reactive를 통해 데이터를 실시간을 변경해 주는것이다.
+  - `return { 변수, 변수 }`를 넣어줘야한다 그렇지 않으면 `<template></template>`에서 인식이 불가능하다.
+  - 스크립트 내부에서 값에 접근하려면 `대상.value`을 사용해줘야 한다.  
+
+✅ Composition API를 적용할 vue
+```html
+<template></template>
+
+<script>
+export default {
+    name : "myPage",
+    // 👉 Composition API 방식은 setup(){} 내부에 코드를 작성하면된다.
+    setup(){
+        // ✅ 꼭 `ref(넣을값)` 혹은 `reactive()`로 감싸줘야함.
+        let follower = ref([]);
+        let test = reactive({name : "yoo"});
+        
+        // 👎 값 확인 불가
+        console.log(follower);
+        // 👍 값을 확인 할 수 있음
+        console.log(follower.value);
+        
+        return {follower, test};
+    }
+}
+</script>
+
+<style></style>
+```
+
+### Composition API - mounted 사용법
+
+- onMounted를 import를 해줘야한다.
+
+✅ Composition API를 적용할 vue
+```html
+<template></template>
+
+<script>
+
+import {onMounted} from 'vue';
+
+export default {
+    name : "myPage",
+    
+    setup(){
+        let follower = ref([]);
+        // 👉 on만 앞에 붙여놨지 똑같다 사용방법은
+        onMounted(()=>{
+             axios.get("/follower.json")
+            .then(res => {
+                // ✅ 다른점이 있다면 변수에 값을 할당하기위해선 ".value"는 필수!
+                follower.value = res.data;
+                })
+        })
+        
+        return {follower};
+    }
+}
+</script>
+
+<style></style>
+```
+
+### Composition API - vuex의 데이터 접근 및 사용 방법
+- useStore를 import를 해줘야한다.
+
+✅ Composition API를 적용할 vue
+```html
+<template></template>
+
+<script>
+
+import {onMounted} from 'vue';
+
+export default {
+    name : "myPage",
+    
+    setup(){
+        //  👉  vuex의 state 접근 방법
+        let store = useStore(); // ✅ $store 와 같음
+        console.log(store);
+        console.log(store.state.name);
+        // 👉 사용 방법은 똑같다!
+        //store.state.commit(); 
+        //store.state.dispatch();
+    }
+}
+</script>
+
+<style></style>
+```
+
+### Composition API - methods 처럼 사용 하는 방법
+✅ Composition API를 적용할 vue
+```html
+<template>
+  <button @click="inputChange">함수 테스트</button>
+</template>
+
+<script>
+
+import {onMounted} from 'vue';
+
+export default {
+    name : "myPage",
+    
+    setup(){
+        // 👉 함수를 추가해준다.
+        function inputChange(){
+            console.log("함수");
+            return 0;
+        }
+        
+        // 👉 반환해 준것을 화면에서 불러다 쓰면 된다.
+        return {inputChange};     
+    }
+}
+</script>
+
+<style></style>
+```
+
+### Composition API - 이외 방식들
+
+- 사실상 import 한 후 `setup(){}` 내부에서 사용만 해주면된다.
+- 앞에 대부분 "on"이분고 이름은 비슷하다. 
+ 
+✅ Composition API를 적용할 vue
+```html
+<template>
+  <div style="padding : 10px">
+    <h4>팔로워</h4>
+    <input placeholder="?" />
+    <div class="post-header" v-for="(item,idx) in follower" :key="idx">
+      <div class="profile" :style="`background-image : url(${item.image})`"></div>
+      <span class="profile-name">{{item.name}}</span>
+    </div>
+    {{result}}
+    {{follower}}
+  </div>
+</template>
+
+<script setup>
+    // TODO 여기다 작성해도 setup()에 작성과 똑같음
+</script>
+
+<script>
+
+import {computed, onMounted, reactive, ref,toRefs, watch} from 'vue';
+// vuex 사용을 위함
+import {useStore} from 'vuex'
+import axios from 'axios';
+
+export default {
+    name : "myPage",
+    // 첫번째 파라미터는 항상 props 임
+    // 2개까지 들어감 2번쨰꺼는 에러등이 들어있음
+    setup(props){
+
+         // 마운디드 사용 하고싶다면
+        onMounted(()=>{
+             axios.get("/follower.json")
+            .then(res => {
+                console.log(res.data);
+                // ref()로 감싸진 변수에 값을 할당하고 싶다면
+                // .value를 붙여줘야햔ㄷ.
+                follower.value = res.data;
+                })
+        })
+
+        // props 사용 방법
+        const { one } = toRefs(props);
+        console.log(one);
+
+
+
+        // ref()안에 무조건 넣어줘야함 모든 데이터 전부다.
+        // 사용 이유는 실시간 재렌더링 떄문임 
+        // vue에서 실시간 렌더링이 가능한 이유는 reference Data 때문이다.
+
+        // 둘의 차이점은 ref : 기본형 변수
+        // reactive : 참조형 변수가 들어간다
+        // 사실 차이가 없음 에러가 안남
+        let follower = ref([]);
+        let test = reactive({name : "yoo"});
+
+        console.log(test);
+
+        // 첫번째 파라미터는 타겟이될 데이터
+        watch(one, ()=>{
+            // TODO
+        })
+
+        // computed 사용법
+        let result = computed(()=>{
+            return follower.value.length;
+        })
+
+
+        // vuex의 state 접근 방법
+        let store = useStore(); // $store 와 같음
+        console.log(store);
+        console.log(store.state.name);
+        //store.state.commit;
+        //store.state.dispatch;
+
+        // methods 사용법
+        function inputChange(){
+            return 0;
+        }
+
+        // 사용 하고싶다면 return 필요
+        return {follower,result,inputChange};
+    }
+}
+</script>
+
+
+<style scoped>
+/* scoped를 사용하면 해당 vue 파일에만 적용이된다. */
+</style>
 ```
