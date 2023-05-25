@@ -1,10 +1,6 @@
 <template>
-  <div :class="`${filterArr[idx]} filter-item`" :style="`background-image : url(${updateImgURL}) `"
-  v-for="(item,idx) in filterArr" :key="idx"></div> 
-
-  <!-- 슬롯 생성  -->
-  <slot name ="a"></slot>
-  <slot name ="b"></slot>
+    <div @click="fire" :class="`${filter} filter-item`" :style="`background-image : url(${updateImgURL}) `"></div>  
+    <slot></slot>
 </template>
 
 <script>
@@ -12,7 +8,12 @@ export default {
     name : "FilterBoxComponent",
     props : {
         updateImgURL : String,
-        filterArr : Array
+        filter : String
+    },
+    methods:{
+        fire(){
+            this.emitter.emit("selectedFilter",this.filter);
+        }
     }
 }
 </script>

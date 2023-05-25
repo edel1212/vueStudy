@@ -15,7 +15,7 @@
     - 👉 뒤로가기 버튼 떄문이다. [중요!]
    -->
   <Container v-bind:instaDataArr="instaDataArr" v-bind:tapStep="tapStep"
-   v-bind:updateImgURL="updateImgURL" @write="content = $event"/>
+   v-bind:updateImgURL="updateImgURL" @write="content = $event" v-bind:filter="filter"/>
 
 
   <!-- 더보기 버튼 -->
@@ -58,7 +58,8 @@ export default {
       btnCnt : 0,
       tapStep : 0,
       updateImgURL : '',
-      content : ''
+      content : '',
+      filter : ''
     }
   },
   components: {
@@ -114,14 +115,19 @@ export default {
         date: new Date(),
         liked: false,
         content: this.content,
-        filter: "perpetua"
+        filter: this.filter
       };
       // 👉 unshift() << 왼쪽에 데이터를 추가
       this.instaDataArr.unshift(registerData);
       // 스탭 초기화
       this.tapStep = 0;
     }
-
+  },
+  mounted(){
+    // "내가 지정한 이벤트명"
+    this.emitter.on("selectedFilter",(data)=>{
+      this.filter = data;
+    })
   }
 }
 </script>

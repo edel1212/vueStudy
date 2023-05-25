@@ -4,10 +4,10 @@
       <div class="profile" :style="{'background-image' : `url(${instaData.userImage})`}"></div>
       <span class="profile-name">{{instaData.name}}</span>
     </div>
-    <div class="post-body"  :style="{'background-image' : `url('${instaData.postImage}')`}"></div>
+    <div :class="instaData.filter" class="post-body" :style="{'background-image' : `url('${instaData.postImage}')`}"></div>
     <div class="post-content">
       <p>{{instaData.likes}} Likes</p>
-      <p><strong>{{instaData.filter}}</strong> {{instaData.content}}</p>
+      <p><strong>{{instaData.name}}</strong> {{instaData.content}}</p>
       <p class="date">{{instaData.date}}</p>
     </div>
 </div> 
@@ -17,7 +17,8 @@
 export default {
     name : "PostComponent",
     props : {
-        instaData : Object
+        instaData : Object,
+        filter : String
     }
 }
 </script>
