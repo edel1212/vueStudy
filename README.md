@@ -1313,3 +1313,98 @@ export default {
 </template>
 </template>
 ```
+
+
+<br/>
+<hr/>
+
+## mitt 라이브러리
+
+### mitt 라이브러리란
+
+- 자식 컴포넌트에서 부모 컴포넌트에 데이터를 전달하기 위해서는 `$emit`을 사용해야하는데 이것이 자식 -> 부모 -> 부모 .. 가 될 경우  
+ 계속해서 `$emit`을 사용 후 `@작명한이름` -> `$event`를 사용해서 데이터를 받아야하는 번거로움이 있는데 **mit**을 사용하면 간단하게 해결 가능  
+
+### 단점
+- mitt 라이브러리 사용의 개수가 증가 할수록 네이밍 및 어디서 사용됐는지 파악이 어려워짐 **개수가 늘어나먼 오히려 불편해짐**
+
+### 그렇다면?
+- vuex를 사용한다.
+
+
+### 사용 방법
+- 1 . mitt 라이브러를 설치해준다. 
+  - `npm install mitt`
+- 2 . main.js에서 사용할 라이브러리 지정 **만약 라이브러리를 추가하여 사용할 경우 아래와 같이 방법으로 설정해주면 된다.**
+  - mitt 라이브러리 import 
+  - 초기 설정이었던 `createApp(App)`를 변수로 할당 
+  - mitt를 함수 변수로 지정
+  - App의 config -> globalProperties -> emitter에 지정
+  - App을 mount()할 위치 지정
+
+✅ main.js
+```javscript
+import { createApp } from 'vue'
+import App from './App.vue'
+
+// 👉 1. mitt 라이브러리  추가
+import mitt from "mitt"
+
+// 👉 2. createApp(App)을 변수로 할당 [상단에 import한 App 추가]
+const app = createApp(App);
+
+// 👉 3. mitt라이브러르를 함수 변수로 생성
+const emitter = mitt();
+
+// 👉 4. app의 config -> globalProperties에 추가
+app.config.globalProperties.emitter = emitter;
+
+// 👉 5. 기존 사용중이던 createApp(App)를 변수로 변경된것으로 수정
+// ❌ createApp(App).mount('#app')
+app.mount('#app');
+```
+
+- 3 . 데이터를 보낼 자식 컴포넌트에서 `this.emitter.emit("내가 작명할 이벤트명", 데이터);`를 사용하여 데이터 전송  
+  - 아래 코드에서의 `emiiter`인 이유는 **main.js에서** `globalProperties.emitter`로 지정했기 때문이다.
+
+✅ 자식.vue
+```html
+<template>
+    <button @click="fire">버튼</button>
+</template>
+
+<script>
+export default {
+    name : "FilterBoxComponent",
+    methods:{
+        fire(){
+            // 👉 mitt 이벤트 실행 방법
+            //this.emitter.emit("작명", 데이터);
+            this.emitter.emit("mittTest",30);
+        }
+    }
+}
+</script>
+```
+
+- 4 . 부모에서 사용 될 떄는 대게 `mounted()`에서 불러 사용된다.
+  ✅ 부모.vue
+```html
+<template></template>
+
+<script>
+export default {
+  name: 'App',
+  mounted(){
+    // 👉 자식 컴포넌트에서 "내가 지정한 이벤트명"
+    this.emitter.on("mittTest",(data)=>{
+      console.log("부모 컴포넌트!");
+      console.log(data);
+      console.log("-----------");
+    })
+  }
+}
+</script>
+
+<style></style>
+```
