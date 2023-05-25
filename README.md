@@ -1539,3 +1539,70 @@ export default store
       <button @click="$store.commit('addAge', 10)">버튼</button>
     </template>
 ```
+
+<br/>
+<hr/>
+
+## Vuex - 비동기 통신을 통해 값 사용 방법
+
+- `mutations:{}`를 사용하여 내부 비동기 통신을 사용하여 store의 데이터 값 변경은 사용하면 안된다. 👎
+  - mutations 자체의 기능은 store의 **값을 바꾸는 기능만**을 해야한다.  
+- 따라서 `actions:{}`를 사용하여 내부에 함수를 구현하여 사용하여야 한다.
+
+### 값을 가져오는 방법
+- `actions:{}`를 추가 후 사용 하면 된다.
+  - 단 actions의 내부 함수에서 비동기로 데이터를 받아요 적용은 꼭 `mutations:{}`의 함수를 통해 값을 변경 해줘야함!
+
+### 주의사항
+- 각각의 구조에 맞는 기능을 사용해야한다.
+  - `mutations:{}` : 값변경
+  - `actions:{}` : 비동기 통신 시 사용
+- `actions:{}` 사용 비동기 통신을 통해 값을 받아온다면 파라미터가 있어야 **mutations**에 접근이 가능하다. 
+  - ex )  `getData(contenxt){ contenxt.commit("사용할 매서드", 넘겨줄 값) }` 
+
+✅ store.js (vuex) 설정 파일
+```javascript
+import { createStore } from 'vuex';
+// 👉 axios import
+import axios from 'axios';
+
+const store = createStore({
+  // 👉 사용될 store Data
+  state(){
+    return {      
+      more : {}
+    }
+  },
+
+  /** ✅ 데이터 수정하는 방법 정의 */
+  mutations:{
+    setMore(state, param){
+        state.more = param;
+    }
+  },
+  /** ✅ ajax요청을 받는곳 - 비동기 요청을 받는다 */
+  actions :{
+   // 👉 네이밍 규칙상 context라고 많이 사용됨
+    getData(contenxt){
+        axios.get(`https://codingapple1.github.io/vue/more0.json`)
+        .then((res)=>res.data)
+        .then((result)=>{
+            // 👉 contenxt를 통해서 뮤테이션 함수 이용
+            contenxt.commit('setMore',result);
+        })
+    }
+  }
+})
+
+export default store
+```
+
+### `actions:{}`에 등록된 메서드 호출방법
+- 사용될 컴포넌트에서 `$store.dispatch('내가 지정한 메서드명')`을 호출하면 된다.
+
+✅ actions를 호출한 컴포넌트.vue
+```html
+<template>
+  <button @click="$store.dispatch('getData')">더 보기</button> 
+</template>
+```
