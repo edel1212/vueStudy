@@ -1472,3 +1472,70 @@ app
     <button @click=" $store.state.name = 'yoo' ">store 값 변경</button>
   </template>
 ```
+
+<br/>
+<hr/>
+
+## Vuex 데이터 변경 방법
+
+- vuex(store)의 데이터는 일반 컴포넌트에서 변경하면 안된다. 👎
+  - 에러가 나는것은 아니지만 여러곳에서 변경하다보면 문제가 발견시 모든 컴포넌트를 찾아봐야하는 문제가 생긴다.
+  - 따라서 vuex를 *설정한 파일*에 메서드를 만들고 사용하는 개념으로 사용해야한다. Service 개념 👍
+
+### 사용 방법
+- vuex(store)를 설정한 파일에 함수를 정의할 `mutations`를 추가 해줘야한다.
+  - `mutations:{}`내부에 함부를 만들어 사용한다.
+  - 주의 사항은 해당 함수에는 필수 파라미터가 존재한다 `함수명(sate){}` 
+    - 해당 파라미터 내부 값에는 `state(){ name : "내가지정한값" }`안의 Object값이 들어 있다.
+
+✅ store.js (vuex)
+```javascript
+import { createStore } from 'vuex'
+
+const store = createStore({
+  state(){
+    return {
+      name : "kim",
+      age : 20,
+      likes : 0
+    }
+  },
+
+  // 👉 데이터 수정하는 방법 정의
+  mutations:{
+    /**
+      💬 첫번 째 파라미터에는 state()내부 Ojbect 값이 들어있다.
+        👉 "this."로 접근하는것이 아님!!
+    */
+    changeName(state){
+        state.name = 'yoojh~!'
+    },
+    // 👉 이후 파라미터는 내가 전달하는 파라미터값이 들어있다.
+    addAge(state, param){
+        state.age += param;
+    }
+  }
+
+})
+
+export default store
+```
+
+✅ 사용되는 컴포넌트
+  - `$store.state.내가 지정한 값`를 통해 값에 접근 
+  - `$store.state.commit("mutations에 작성한 값", 파라미터)`를 통해 값을 변경하는 함수에 접근 
+
+```html
+    <template>
+  
+      <h4>안녕 {{$store.state.name}}</h4>
+      <!--  👎 이런식으로 변경하면 안된다!! -->
+      <button @click=" $store.state.name = 'yoo' ">store 값 변경</button>
+      
+      <!-- 👍 commit()함수를 통해 mutations의 함수에 접근하여 값을 변경  -->
+      <button @click="$store.commit('changeName')">버튼</button>
+    
+      <h4>안녕 {{$store.state.age}}</h4>
+      <button @click="$store.commit('addAge', 10)">버튼</button>
+    </template>
+```
