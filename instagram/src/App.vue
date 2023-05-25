@@ -10,6 +10,10 @@
     <img src="./assets/logo.png" class="logo" />
   </div>
 
+  <h4>안녕 {{$store.state.name}}</h4>
+  <!--  ✅ 이런식으로 변경하면 안된다!! -->
+  <button @click=" $store.state.name = 'yoo' ">store 값 변경</button>
+  
   <!-- 
     Comonent를 사용해도 되나 Router를 사용해야하는이유
     - 👉 뒤로가기 버튼 떄문이다. [중요!]
