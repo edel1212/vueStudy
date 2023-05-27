@@ -23,12 +23,19 @@
         <textarea @input="$emit('write', $event.target.value)" class="write-box">write!</textarea>
     </div>
   </div>
+
+   <!-- 글작성페이지 -->
+  <div v-if="tapStep == 3">
+    <MyPage v-bind:one="1"/>
+  </div>
   
 </template>
 
 <script>
 import Post from "/src/components/Post.vue"
 import FilterBox from "/src/components/FilterBox.vue"
+import MyPage from "./Mypage.vue"
+
 export default {
     data(){
         return {
@@ -42,6 +49,7 @@ export default {
     ,components :{
         Post,
         FilterBox,
+        MyPage
     },
     props : {
         instaDataArr : Array,

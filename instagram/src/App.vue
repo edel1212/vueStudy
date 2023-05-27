@@ -10,23 +10,6 @@
     <img src="./assets/logo.png" class="logo" />
   </div>
 
-  <!-- 랜더링 때마다 읽어서 업데이트 -->
-  <p>{{now()}}</p>
-  <!-- 랜더링 때마다 호출은하나 메서드 호출해도 처음 지정값을 반환 -->
-  <p>{{now2}}</p>
-  <p> {{counter}}</p>
-
-  {{name}}
-  {{age}}
-  {{내가정한이름}}
-
-  <button @click="$store.commit('addAge',14)">나이 증가</button>
-  <button @click="addAge(14)">나이 증가[mapMutations 사용]</button>
-
-
- <button @click="counter++">재실행</button>
-
-
   <!-- Comonent를 사용해도 되나 Router를 사용해야하는이유
     - 👉 뒤로가기 버튼 떄문이다. [중요!] -->
   <Container v-bind:instaDataArr="instaDataArr" v-bind:tapStep="tapStep"
@@ -51,7 +34,7 @@
 import Container from "./components/Container.vue";
 
 // mapState import - {} 필수
-import {mapMutations, mapState} from "vuex";
+import {mapMutations, mapState, mapActions} from "vuex";
 
 export default {
   name: 'App',
@@ -59,7 +42,7 @@ export default {
     return {
       instaDataArr : this.$store.state.instaDataArr,
       btnCnt : 0,
-      tapStep : 0,
+      tapStep : 3,
       updateImgURL : '',
       content : '',
       filter : '',
@@ -72,13 +55,14 @@ export default {
   methods : {
 
     ...mapMutations(["changeName", "addAge"]),
+    ...mapActions(["addInstaData"]),
 
     /** 더 보기 */
     more(){
       // Btn Count에 따른 URL 변화
       let parBtnCnt = this.btnCnt%2;
-      this.btnCnt ++;
-      this.$store.dispatch("addInstaData", parBtnCnt);
+      this.btnCnt ++;    
+      this.addInstaData(parBtnCnt);
     },
     /** 파일 업로드 */
     imagUpload(e){

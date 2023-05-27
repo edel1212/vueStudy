@@ -40,18 +40,7 @@ const store = createStore({
     },
   },
   /** ajax요청을 받는곳 - 비동기 요청을 받는다 */
-  actions :{
-    getData(contenxt){
-        axios.get(`https://codingapple1.github.io/vue/more0.json`)
-        .then((res)=>res.data)
-        .then((result)=>{
-            // 뮤테이션 함수 이용
-            contenxt.commit('setMore',result);
-            
-            console.log(contenxt.rootState);
-            console.log(contenxt.state);
-        })
-    },
+  actions :{    
     addInstaData(contenxt, parBtnCnt){
       axios.get(`https://codingapple1.github.io/vue/more${parBtnCnt}.json`)
       .then((res)=>res.data)
