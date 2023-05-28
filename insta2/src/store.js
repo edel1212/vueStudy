@@ -4,12 +4,19 @@
   const store = createStore({
     state(){
       return {
-        instaArr : null
+        instaArr : null,
+        stepCnt : 0,
+        filterArr : [ "aden", "_1977", "brannan", "brooklyn", "clarendon", "earlybird", "gingham", "hudson", 
+                            "inkwell", "kelvin", "lark", "lofi", "maven", "mayfair", "moon", "nashville", "perpetua", 
+                            "reyes", "rise", "slumber", "stinson", "toaster", "valencia", "walden", "willow", "xpro2"]
       }
     },
     mutations:{
       setInstaData(state, param){
         state.instaArr = param;
+      },
+      setStepCnt(state, param){
+        state.stepCnt = param;
       }
     }, actions :{
       getData(){

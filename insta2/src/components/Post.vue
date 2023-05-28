@@ -1,5 +1,5 @@
 <template>
-  <div class="post" v-for="(instaData, idx) in propsInsta.result" :key="idx">   
+  <div class="post" v-for="(instaData, idx) in instaArr" :key="idx">   
       <div class="post-header">
         <div class="profile" :style="{'background-image' : `url(${instaData.userImage})`}"></div>
         <span class="profile-name">{{instaData.name}}</span>
@@ -20,8 +20,20 @@ export default {
 </script>
 
 <script setup>
-  import { defineProps } from 'vue';
-  const  propsInsta  = defineProps(['result']);
+  import {useStore} from 'vuex'
+  import { onMounted, ref } from 'vue';
+
+  const store = useStore();
+ 
+  const instaArr = ref(null);
+  onMounted(() => {
+    store.dispatch("getData");
+  });
+    
+  // Vuex 스토어의 instaArr 상태를 반응형 변수와 연결
+  store.watch(() => store.state.instaArr, (newValue) => {
+    instaArr.value = newValue;
+  });
 
 </script>
 
