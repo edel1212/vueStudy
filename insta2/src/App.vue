@@ -8,11 +8,12 @@
         <input @change="imagUpload" accept="image/*" type="file" id="file" class="inputfile" />
         <label for="file" class="input-plus">Write</label>
       </li>
-      <li v-if="store.state.stepCnt == 1">Next</li>
+      <li v-if="store.state.stepCnt == 1" @click="movePage(2)">Next</li>
+      <li v-if="store.state.stepCnt == 2" @click="register">Register</li>
     </ul>
     <img src="./assets/logo.png" class="logo" />    
   </div>
-  
+  {{store.state.registerData}}
   <!-- Container Component -->
   <Container v-bind:updateImgURL="updateImgURL"/>
 
@@ -74,6 +75,11 @@ export default {
         updateImgURL.value = URL.createObjectURL(file);
       } 
       movePage(1);
+  }
+
+  const register = ()=>{
+    store.dispatch("registerData", store.state.registerData);
+    movePage(0);
   }
 
 </script>

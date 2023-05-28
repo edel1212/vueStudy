@@ -1,18 +1,18 @@
 <template>    
   <!-- 필터선택페이지 -->
-  <div v-if="stepCnt == 1">
-    <div :class="checkFilter" class="upload-image" :style="`background-image : url(${updateImgURL})`"></div>
+  <div v-if="store.state.stepCnt == 1">
+    <div :class="checkFilter" class="upload-image" :style="`background-image : url(${prop.updateImgURL})`"></div>
     <div class="filters">        
-        <div @click="checkFilter = item" v-for="(item, idx) in filterArr" :key="idx" :class="`${item} filter-item`" :style="`background-image : url(${updateImgURL})`"></div>      
+        <div @click="selectedFilter(item)" v-for="(item, idx) in filterArr" :key="idx" :class="`${item} filter-item`" :style="`background-image : url(${updateImgURL})`"></div>      
     </div>  
   </div>
   
 
   <!-- 글작성페이지 -->
-  <div v-if="stepCnt == 2">
-    <div class="upload-image"></div>
+  <div v-if="store.state.stepCnt == 2">
+    <div class="upload-image" :class="checkFilter" :style="`background-image : url(${prop.updateImgURL})`"></div>
     <div class="write">
-        <textarea @input="TODO" class="write-box">write!</textarea>
+        <textarea @input="writeContent" class="write-box" placeholder="write"></textarea>
     </div>
   </div>
 </template>
@@ -21,27 +21,44 @@
 export default {
     name : "writeApp",
     data(){
-        return {
-            checkFilter : ""
-        }
-    },
-    props :{
-        updateImgURL: {
-            type: String,
-            required: true
-        }
+        return {}
     }
 }
 </script>
 
 <script setup>
     import {useStore} from 'vuex';
-    import { ref } from 'vue';
+    import { ref, defineProps } from 'vue';
 
     const store = useStore();
-    const stepCnt = ref(store.state.stepCnt);
+    const prop = defineProps({
+        updateImgURL : String,
+        });
 
     const filterArr = ref(store.state.filterArr);
+
+    const checkFilter = ref();
+
+    const writeResult = ref({
+        name: '신규등록',
+        userImage: 'https://placeimg.com/100/100/arch',
+        postImage: 'https://placeimg.com/640/480/arch',
+        likes: 0,
+        liked: false,
+        content: '',
+        filter: ''
+    });
+
+    const selectedFilter = (selected)=>{
+        writeResult.value.filter = selected;
+        checkFilter.value = selected;
+    }
+
+    const writeContent = (e)=>{
+        if(!e.target.value) return;
+        writeResult.value.content = e.target.value;
+        store.commit("setRegisterData",writeResult.value);
+    }
 </script>
 
 
