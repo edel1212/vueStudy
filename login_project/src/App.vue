@@ -1,16 +1,10 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
 
-  <br/>
+  <button @click="logout">logout</button>
 
-  <label for="idInput">ID :</label>
-  <input type="text" id="idInput" name="id">
-  
   <br/>
-  <label for="pwInput">PW :</label>
-  <input type="password" id="pwInput" name="pw">
-  <button @click="login(event)">login</button>
-
+  <h1>ID :: {{$store.state.id}}</h1>
   <p>-----------------------</p>
   <router-view></router-view>
   <p>-----------------------</p>
@@ -26,17 +20,14 @@ export default {
 
 <script setup>
 
-/**
- * login Event
- */
-const login = (e)=>{
-  const id = document.querySelector("#idInput").value;
-  const pw = document.querySelector("#pwInput").value;
-  console.log(id);
-  console.log(pw);
-}
+  import { useRouter } from 'vue-router'
 
+  const router = new useRouter();
 
+  const logout = (e)=>{
+    sessionStorage.removeItem("jwt");
+    router.push("/");
+  }
 </script>
 
 <style>
